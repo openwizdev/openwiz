@@ -1,0 +1,2 @@
+#1804 green run for the granted catalogue rows: cargo test -p openwiz-tests --test cli-agent (the whole target: cp1 catalogue checks, the models forms and today's models tests).
+test result: ok. 101 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in <t>

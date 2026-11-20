@@ -9,7 +9,7 @@ use std::process::Command;
 
 use serde_json::Value;
 
-const APPROVED_DIRECT: &[&str] = &["serde", "serde_json"];
+const APPROVED_DIRECT: &[&str] = &["serde", "serde_json", "rustix"];
 fn root() -> &'static Path {
     Path::new(concat!(env!("CARGO_MANIFEST_DIR"), "/.."))
 }

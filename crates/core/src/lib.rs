@@ -21,6 +21,7 @@ pub mod limits;
 pub mod loops;
 pub mod messaging;
 pub mod model;
+pub mod models;
 pub mod new_thread;
 pub mod ops;
 pub mod prompt;

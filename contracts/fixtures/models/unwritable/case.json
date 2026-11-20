@@ -1,0 +1,14 @@
+{
+  "fleet": "one-table/fleet.md",
+  "argv": [
+    "models",
+    "set",
+    "reviewer",
+    "codex",
+    "syn-vendor/demo:latest",
+    "medium",
+    "--json"
+  ],
+  "exit": 5,
+  "writes": {}
+}

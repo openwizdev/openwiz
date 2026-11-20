@@ -16,6 +16,7 @@ openwiz-adapter-cloudroom = { path = "../adapters/cloudroom" }
 openwiz-adapter-github = { path = "../adapters/github" }
 serde.workspace = true
 serde_json.workspace = true
+rustix.workspace = true
 
 [lints]
 workspace = true

@@ -1,0 +1,13 @@
+{
+  "fleet": "one-table/fleet.md",
+  "argv": [
+    "models",
+    "list",
+    "--save",
+    "--json"
+  ],
+  "exit": 0,
+  "writes": {
+    "docs/agents/models-offered.json": "list/models-offered.json"
+  }
+}

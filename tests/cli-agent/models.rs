@@ -17,7 +17,7 @@ use std::{
 
 /// The synthetic catalogue's read time, 2023-11-14T22:23:20Z, so the text's
 /// read line is fixed; real monotonic time, for the read deadline.
-struct FixedClock;
+pub(super) struct FixedClock;
 impl Clock for FixedClock {
     fn now(&self) -> Timestamp {
         Timestamp(1_700_000_600_000)
@@ -37,12 +37,12 @@ fn status_file(name: &str) -> String {
         .to_owned()
 }
 
-struct Models(Sandbox);
+pub(super) struct Models(pub(super) Sandbox);
 impl Models {
     /// A sandbox whose `room-cli` is the fake, answering `cloud status
     /// --json` with `answer` and accepting any spawn, so a stray write is
     /// counted rather than refused.
-    fn new(answer: Value) -> Self {
+    pub(super) fn new(answer: Value) -> Self {
         let f = Self(Sandbox::new());
         let bin = f.0.0.join("bin");
         fs::remove_file(bin.join("room-cli")).unwrap();
@@ -77,8 +77,26 @@ impl Models {
     fn file(name: &str) -> Self {
         Self::new(json!({"stdout_file": status_file(name)}))
     }
-    fn run(&self, args: &[&str]) -> (i32, String, String) {
-        let out = Command::new(fixture_cli())
+    pub(super) fn run(&self, args: &[&str]) -> (i32, String, String) {
+        let out = self.command(args).output().unwrap();
+        (
+            out.status.code().expect("exited"),
+            String::from_utf8(out.stdout).unwrap(),
+            String::from_utf8(out.stderr).unwrap(),
+        )
+    }
+    /// The `openwiz <args>` process, started; its output discarded.
+    pub(super) fn spawn(&self, args: &[&str]) -> std::process::Child {
+        let null = Stdio::null;
+        self.command(args)
+            .stdout(null())
+            .stderr(null())
+            .spawn()
+            .unwrap()
+    }
+    fn command(&self, args: &[&str]) -> Command {
+        let mut command = Command::new(fixture_cli());
+        command
             .args(args)
             .env_clear()
             .env(
@@ -93,14 +111,8 @@ impl Models {
             .env("OPENWIZ_STATE_DIR", self.0.0.join("state"))
             .env("OPENWIZ_FIXTURE_PROGRAM", self.0.0.join("bin/room-cli"))
             .current_dir(&self.0.0)
-            .stdin(Stdio::null())
-            .output()
-            .unwrap();
-        (
-            out.status.code().expect("exited"),
-            String::from_utf8(out.stdout).unwrap(),
-            String::from_utf8(out.stderr).unwrap(),
-        )
+            .stdin(Stdio::null());
+        command
     }
     /// `openwiz models <args>` (the words after `models`) in this process, through the production
     /// `run_models` and the real CloudRoom source, with the fixed clock.
@@ -136,7 +148,7 @@ impl Models {
         );
         (code, doc, err)
     }
-    fn invocations(&self) -> Vec<Vec<String>> {
+    pub(super) fn invocations(&self) -> Vec<Vec<String>> {
         fs::read_to_string(self.0.0.join("bin/invocations.log"))
             .unwrap_or_default()
             .lines()

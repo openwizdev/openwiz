@@ -1,0 +1,154 @@
+{
+  "schema": "openwiz.models-show.v1",
+  "file": "docs/agents/fleet.md",
+  "read": "models_table",
+  "older_tables_present": true,
+  "roles": {
+    "orchestrator": {
+      "follows": null,
+      "choice": {
+        "provider": "claude-code",
+        "model": "claude-opus-5-5",
+        "effort": "medium",
+        "family": "claude",
+        "names": {
+          "harness": "Claude Code",
+          "model": "Opus 5.5",
+          "effort": "Medium"
+        }
+      }
+    },
+    "builder": {
+      "follows": null,
+      "choice": {
+        "provider": "claude-code",
+        "model": "claude-opus-5-5",
+        "effort": "medium",
+        "family": "claude",
+        "names": {
+          "harness": "Claude Code",
+          "model": "Opus 5.5",
+          "effort": "Medium"
+        }
+      }
+    },
+    "reviewer": {
+      "follows": null,
+      "choice": {
+        "provider": "codex",
+        "model": "vendor/demo",
+        "effort": "medium",
+        "family": "gpt",
+        "names": {
+          "harness": "Codex",
+          "model": "vendor/demo",
+          "effort": "Medium"
+        }
+      }
+    },
+    "small_builder": {
+      "follows": null,
+      "choice": {
+        "provider": "claude-code",
+        "model": "claude-opus-5-5",
+        "effort": "medium",
+        "family": "claude",
+        "names": {
+          "harness": "Claude Code",
+          "model": "Opus 5.5",
+          "effort": "Medium"
+        }
+      }
+    },
+    "fixer": {
+      "follows": null,
+      "choice": {
+        "provider": "claude-code",
+        "model": "claude-opus-5-5",
+        "effort": "medium",
+        "family": "claude",
+        "names": {
+          "harness": "Claude Code",
+          "model": "Opus 5.5",
+          "effort": "Medium"
+        }
+      }
+    }
+  },
+  "reviews": {
+    "claude": {
+      "from": "reviewer",
+      "choice": {
+        "provider": "codex",
+        "model": "vendor/demo",
+        "effort": "medium",
+        "family": "gpt",
+        "names": {
+          "harness": "Codex",
+          "model": "vendor/demo",
+          "effort": "Medium"
+        }
+      }
+    },
+    "gpt": {
+      "from": "builder",
+      "choice": {
+        "provider": "claude-code",
+        "model": "claude-opus-5-5",
+        "effort": "medium",
+        "family": "claude",
+        "names": {
+          "harness": "Claude Code",
+          "model": "Opus 5.5",
+          "effort": "Medium"
+        }
+      }
+    }
+  },
+  "fixers": {
+    "claude": {
+      "from": "fixer",
+      "choice": {
+        "provider": "claude-code",
+        "model": "claude-opus-5-5",
+        "effort": "medium",
+        "family": "claude",
+        "names": {
+          "harness": "Claude Code",
+          "model": "Opus 5.5",
+          "effort": "Medium"
+        }
+      }
+    },
+    "gpt": {
+      "from": "reviewer",
+      "choice": {
+        "provider": "codex",
+        "model": "vendor/demo",
+        "effort": "medium",
+        "family": "gpt",
+        "names": {
+          "harness": "Codex",
+          "model": "vendor/demo",
+          "effort": "Medium"
+        }
+      }
+    }
+  },
+  "warnings": [
+    {
+      "kind": "older_table_kept",
+      "table": "Reviewer for Claude-built",
+      "models_table": "vendor/demo",
+      "older": "gpt-6.2-sol",
+      "text": "Models table: vendor/demo; older Reviewer for Claude-built table kept at gpt-6.2-sol; fleets start gpt-6.2-sol until launch-fleet reads the Models table (MD4)"
+    },
+    {
+      "kind": "older_table_kept",
+      "table": "Fixer, GPT",
+      "models_table": "vendor/demo",
+      "older": "gpt-6.2-sol",
+      "text": "Models table: vendor/demo; older Fixer, GPT table kept at gpt-6.2-sol; fleets start gpt-6.2-sol until launch-fleet reads the Models table (MD4)"
+    }
+  ]
+}

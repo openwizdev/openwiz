@@ -1,0 +1,87 @@
+{
+  "schema": "openwiz.models-set.v1",
+  "outcome": "changed",
+  "role": "reviewer",
+  "asked": {
+    "provider": "codex",
+    "model": "vendor/demo",
+    "effort": "medium"
+  },
+  "before": {
+    "follows": null,
+    "choice": {
+      "provider": "codex",
+      "model": "gpt-6.2-sol",
+      "effort": "medium",
+      "family": "gpt",
+      "names": {
+        "harness": "Codex",
+        "model": "Sol 6.2",
+        "effort": "Medium"
+      }
+    }
+  },
+  "after": {
+    "follows": null,
+    "choice": {
+      "provider": "codex",
+      "model": "vendor/demo",
+      "effort": "medium",
+      "family": "gpt",
+      "names": {
+        "harness": "Codex",
+        "model": "vendor/demo",
+        "effort": "Medium"
+      }
+    }
+  },
+  "models_table_added": true,
+  "older_tables": [
+    {
+      "table": "Builder",
+      "outcome": "unchanged"
+    },
+    {
+      "table": "Builder for small tickets",
+      "outcome": "unchanged"
+    },
+    {
+      "table": "Reviewer for Claude-built",
+      "outcome": "kept"
+    },
+    {
+      "table": "Reviewer for GPT-built",
+      "outcome": "unchanged"
+    },
+    {
+      "table": "Fixer, Claude",
+      "outcome": "unchanged"
+    },
+    {
+      "table": "Fixer, GPT",
+      "outcome": "kept"
+    }
+  ],
+  "files": [
+    "docs/agents/fleet.md",
+    "docs/agents/models-offered.json"
+  ],
+  "warnings": [
+    {
+      "kind": "older_table_kept",
+      "table": "Reviewer for Claude-built",
+      "models_table": "vendor/demo",
+      "older": "gpt-6.2-sol",
+      "text": "Models table: vendor/demo; older Reviewer for Claude-built table kept at gpt-6.2-sol; fleets start gpt-6.2-sol until launch-fleet reads the Models table (MD4)"
+    },
+    {
+      "kind": "older_table_kept",
+      "table": "Fixer, GPT",
+      "models_table": "vendor/demo",
+      "older": "gpt-6.2-sol",
+      "text": "Models table: vendor/demo; older Fixer, GPT table kept at gpt-6.2-sol; fleets start gpt-6.2-sol until launch-fleet reads the Models table (MD4)"
+    }
+  ],
+  "refusal": null,
+  "offered": null
+}

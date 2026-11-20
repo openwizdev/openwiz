@@ -1,0 +1,4 @@
+#1804 R1-R4 green: cargo test -p openwiz-tests --test cli-agent models_forms, then the cli-agent, messaging and fleet targets.
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 94 filtered out; finished in <t>
+cli-agent: 105 passed; messaging: 9 passed; fleet: 168 passed.
+R2 discrimination: with the docs/agents lock removed (edit check kept), set_never_loses_an_edit_made_while_it_reads_cloudroom fails at models_forms.rs:533 (left: 1, right: 0: "docs/agents/fleet.md changed while set ran, so nothing was written; run it again"); restored, it passes. Not committed.

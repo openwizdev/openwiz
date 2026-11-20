@@ -1,0 +1,10 @@
+$ cargo test -p openwiz-tests --test cli-agent models_contract   # red: stub schema
+test models_contract::every_handoff_line_runs_the_set_it_names ... ok
+test models_contract::a_malformed_models_table_is_refused_not_guessed ... ok
+test models_contract::the_schema_takes_every_report_fixture_and_refuses_each_malformed_one ... FAILED
+test models_contract::todays_choices_read_the_same_from_the_one_table_and_the_five_tables ... ok
+test models_contract::every_show_fixture_is_its_fleet_files_reading ... ok
+test models_contract::every_set_fixture_writes_what_its_report_says ... ok
+thread 'models_contract::the_schema_takes_every_report_fixture_and_refuses_each_malformed_one' panicked at tests/cli-agent/../../contracts/fixtures/models/models_contract.rs:105:9:
+invalid/handoff-partial-choice.json passed its definition
+test result: FAILED. 5 passed; 1 failed; 0 ignored; 0 measured; 88 filtered out; finished in <t>

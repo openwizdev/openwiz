@@ -1,0 +1,17 @@
+$ cargo test -p openwiz-tests --test cli-agent models_contract   # red for the planner ruling on ruling 14: kept older rows must be named
+test models_contract::every_handoff_line_runs_the_set_it_names ... ok
+test models_contract::a_malformed_models_table_is_refused_not_guessed ... ok
+test models_contract::todays_choices_read_the_same_from_the_one_table_and_the_five_tables ... ok
+test models_contract::every_show_fixture_is_its_fleet_files_reading ... FAILED
+test models_contract::every_set_fixture_writes_what_its_report_says ... FAILED
+test models_contract::the_schema_takes_every_report_fixture_and_refuses_each_malformed_one ... FAILED
+thread 'models_contract::every_show_fixture_is_its_fleet_files_reading' panicked at tests/cli-agent/../../contracts/fixtures/models/models_contract.rs:476:9:
+  left: Object {"file": String("docs/agents/fleet.md"), "fixers": Object {"claude": Object {"choice": Object {"effort": String("medium"), "family": String("claude"), "model": String("claude-opus-5-5"), "names": Object {"effort": String("Medium"), "harness": String("Claude Code"), "model": String("Opus 5.5")}, "provider": String("claude-code")}, "from": String("fixer")}, "gpt": Object {"choice": Ob
+ right: Object {"file": String("docs/agents/fleet.md"), "fixers": Object {"claude": Object {"choice": Object {"effort": String("medium"), "family": String("claude"), "model": String("claude-opus-5-5"), "names": Object {"effort": String("Medium"), "harness": String("Claude Code"), "model": String("Opus 5.5")}, "provider": String("claude-code")}, "from": String("fixer")}, "gpt": Object {"choice": Ob
+thread 'models_contract::every_set_fixture_writes_what_its_report_says' panicked at tests/cli-agent/../../contracts/fixtures/models/models_contract.rs:585:9:
+  left: Array [Object {"kind": String("older_table_kept"), "models_table": String("vendor/demo"), "older": String("gpt-6.2-sol"), "table": String("Reviewer for Claude-built"), "text": String("Models table: vendor/demo; older Reviewer for Claude-built table kept at gpt-6.2-sol; fleets start gpt-6.2-sol until launch-fleet reads the Models table (MD4)")}, Object {"kind": String("older_table_kept"), "
+ right: Array []
+thread 'models_contract::the_schema_takes_every_report_fixture_and_refuses_each_malformed_one' panicked at tests/cli-agent/../../contracts/fixtures/models/models_contract.rs:94:9:
+  left: ["$: matches 0 of the oneOf options, not exactly one"]
+ right: []
+test result: FAILED. 3 passed; 3 failed; 0 ignored; 0 measured; 88 filtered out; finished in <t>

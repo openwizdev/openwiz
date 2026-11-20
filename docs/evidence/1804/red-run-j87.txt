@@ -1,0 +1,5 @@
+#1804 J87 (ruling 16 overturned) red, at bbd936c958187bbedbc38c12acf0e2cf997c6572's code: cargo test -p openwiz-tests --test cli-agent models_forms (a_raced_docs_agents_is_refused_the_same_on_every_unix: the writer names no target_os gate and no /proc route, so macOS takes the same held-folder path; then a docs/agents that is a link, or is swapped for one during set's catalogue read, is refused or written only through the folder set checked).
+models_forms::a_raced_docs_agents_is_refused_the_same_on_every_unix --- FAILED
+thread 'models_forms::a_raced_docs_agents_is_refused_the_same_on_every_unix' panicked at tests/cli-agent/models_forms.rs:754:9:
+the writer depends on target_os
+test result: FAILED. 13 passed; 1 failed; 0 ignored; 0 measured; 94 filtered out; finished in <t>

@@ -117,6 +117,10 @@ Usage:
   openwiz ls [-l] [-a] [--hidden] [--limit N] [--offset N] [--json]
   openwiz show <id> [--json]
   openwiz models [--json]
+  openwiz models show [--json]
+  openwiz models list [--save] [--json]
+  openwiz models set <role> <provider> <model> <effort> [--json]
+  openwiz models set <small-builder|fixer> follows-builder [--json]
 {fleets_usage}{fleet_usage}{tick_usage}{loops_usage}{loop_files_usage}{init_usage}{github_usage}  openwiz help --agent
   openwiz help
   openwiz --help
@@ -147,6 +151,16 @@ models
   read, as reported (it may answer from a saved copy); harnesses it lists but OpenWiz
   cannot offer, with the reason. Nothing is marked default. --json prints
   openwiz.cloud-options.v1.
+models show|list|set
+  Run from the project root; they read docs/agents/fleet.md (contracts/models.v1.md).
+  show: each role's harness, model and effort, what it follows, and each family's
+  review and fix round; no cloud status read. list: the options above with the
+  recommended choice per role; --save writes docs/agents/models-offered.json.
+  set: checks the choice against one cloud status read, rewrites the role's row
+  (and the older tables' matching rows), writes the snapshot and prints what
+  changed, for you to commit; follows-builder reads nothing. Roles: orchestrator,
+  builder, reviewer, small-builder, fixer. --json prints openwiz.models-show.v1,
+  openwiz.models-list.v1 or openwiz.models-set.v1.
 {loops_help}{loop_files_help}{fleets_help}{fleet_help}{tick_help}{github_help}
 Exit codes:
   0  a result was printed, complete or partial
@@ -157,6 +171,8 @@ Exit codes:
   3  show: the session was not found
   0  models: options were printed
   13 models: nothing can be offered right now; the report says why
+  1  models show|list|set: fleet.md missing, unreadable or refused, or a failed write
+  5  models set: not offered, or not writable to the Models table; nothing was changed
 {fleets_exit_codes}{fleet_exit_codes}On an error, stdout is empty unless ls, show or --help fails to write or flush output;
 some output may already be on stdout in that case.
 In either case, stderr has one line starting with \"openwiz: \".

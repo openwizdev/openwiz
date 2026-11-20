@@ -1,0 +1,22 @@
+#1804 R1-R4 red, at 0b51db961346261d68fedcaa6daa6572b112567b's code: cargo test -p openwiz-tests --test cli-agent models_forms (R1 staging write, R2 lost edit, R3 surplus older rows, R4 an id the older readers refuse).
+models_forms::older_tables_with_surplus_rows_are_refused --- FAILED
+models_forms::an_id_the_older_readers_refuse_stays_in_the_models_table_only --- FAILED
+models_forms::set_never_loses_an_edit_made_while_it_reads_cloudroom --- FAILED
+models_forms::writes_create_their_own_staging_file_and_stay_in_the_checkout --- FAILED
+thread 'models_forms::older_tables_with_surplus_rows_are_refused' panicked at tests/cli-agent/models_forms.rs:564:13:
+assertion `left == right` failed: | Effort | Medium | `--reasoning-level medium` |
+  left: 0
+ right: 1
+thread 'models_forms::an_id_the_older_readers_refuse_stays_in_the_models_table_only' panicked at tests/cli-agent/models_forms.rs:598:5:
+assertion `left == right` failed
+  left: Object {"outcome": String("changed"), "table": String("Builder")}
+ right: Object {"outcome": String("kept"), "table": String("Builder")}
+thread 'models_forms::set_never_loses_an_edit_made_while_it_reads_cloudroom' panicked at tests/cli-agent/models_forms.rs:516:5:
+assertion `left == right` failed: 
+  left: (0, "Orchestrator: Opus 5.5 Medium on Claude Code (claude-code claude-opus-5-5 medium) -> Sol 6.2 High on Codex (codex gpt-6.2-sol high)\nwrote docs/agents/fleet.md\nwrote docs/agents/models-offered.json\n")
+ right: (1, "")
+thread 'models_forms::writes_create_their_own_staging_file_and_stay_in_the_checkout' panicked at tests/cli-agent/models_forms.rs:466:5:
+assertion `left == right` failed
+  left: ["fleet.md", "models-offered.json"]
+ right: ["fleet.md", "fleet.md.openwiz-writing", "models-offered.json", "models-offered.json.openwiz-writing"]
+test result: FAILED. 7 passed; 4 failed; 0 ignored; 0 measured; 94 filtered out; finished in <t>

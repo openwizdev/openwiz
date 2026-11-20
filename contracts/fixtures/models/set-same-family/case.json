@@ -1,0 +1,17 @@
+{
+  "fleet": "one-table/fleet.md",
+  "argv": [
+    "models",
+    "set",
+    "reviewer",
+    "claude-code",
+    "claude-opus-5-5",
+    "high",
+    "--json"
+  ],
+  "exit": 0,
+  "writes": {
+    "docs/agents/fleet.md": "set-same-family/after.md",
+    "docs/agents/models-offered.json": "list/models-offered.json"
+  }
+}

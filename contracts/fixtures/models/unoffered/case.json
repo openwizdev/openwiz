@@ -1,0 +1,14 @@
+{
+  "fleet": "one-table/fleet.md",
+  "argv": [
+    "models",
+    "set",
+    "builder",
+    "claude-code",
+    "syn-model-not-offered",
+    "medium",
+    "--json"
+  ],
+  "exit": 5,
+  "writes": {}
+}

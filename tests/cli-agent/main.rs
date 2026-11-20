@@ -28,6 +28,11 @@ mod loop_export;
 mod loop_plan;
 mod loop_validate;
 mod models;
+// #1804 (MD2): `openwiz models show`, `list` and `set`.
+mod models_forms;
+// #1803 (MD1): the models contract's fixture checks, kept beside the fixtures.
+#[path = "../../contracts/fixtures/models/models_contract.rs"]
+mod models_contract;
 mod process;
 mod results;
 mod review;
@@ -121,6 +126,9 @@ fn cp1_catalogue_covers_the_public_command_flag_and_schema_matrix() {
         ("ls", "-l -a --hidden --limit --offset --json --help"),
         ("show", "--json --help"),
         ("models", "--json --help"),
+        ("models.show", "--json --help"),
+        ("models.list", "--save --json --help"),
+        ("models.set", "--json --help"),
         ("fleets", "--json --help"),
         ("fleet", "--json"),
         ("fleet.tick.preview", "--dry-run --json"),
@@ -322,8 +330,8 @@ fn cp1_advertised_flags_are_accepted_by_the_shipped_public_parsers() {
             "fleet.due" => "fleet due --github-only",
             // These three parsers are private; their flags are checked through
             // real processes below, using only trap sources or absent config.
-            "fleets" | "models" | "loop.off" | "loop.on" | "loop.validate" | "loop.export"
-            | "loop.plan" | "loop.apply" => continue,
+            "fleets" | "models" | "models.show" | "models.list" | "models.set" | "loop.off"
+            | "loop.on" | "loop.validate" | "loop.export" | "loop.plan" | "loop.apply" => continue,
             "init" | "init.apply" => continue,
             "github.token" => {
                 for flag in command["flags"].as_array().unwrap() {
@@ -486,6 +494,9 @@ fn cp1_catalogue_is_discoverable_without_sources_or_state() {
             "ls",
             "show",
             "models",
+            "models.show",
+            "models.list",
+            "models.set",
             "fleets",
             "fleet",
             "fleet.tick.preview",

@@ -1,0 +1,46 @@
+{
+  "schema": "openwiz.models-handoff.v1",
+  "lines": [
+    {
+      "role": "orchestrator",
+      "to": {
+        "provider": "codex",
+        "model": "gpt-6.2-sol",
+        "effort": "high"
+      },
+      "line": "Set the orchestrator to Sol 6.2 High on Codex: run `openwiz models set orchestrator codex gpt-6.2-sol high` and commit the change."
+    },
+    {
+      "role": "builder",
+      "to": {
+        "provider": "claude-code",
+        "model": "claude-opus-5-5",
+        "effort": "medium"
+      },
+      "line": "Set the builder to Opus 5.5 Medium on Claude Code: run `openwiz models set builder claude-code claude-opus-5-5 medium` and commit the change."
+    },
+    {
+      "role": "reviewer",
+      "to": {
+        "provider": "codex",
+        "model": "gpt-6.2-sol",
+        "effort": "medium"
+      },
+      "line": "Set the reviewer to Sol 6.2 Medium on Codex: run `openwiz models set reviewer codex gpt-6.2-sol medium` and commit the change."
+    },
+    {
+      "role": "small_builder",
+      "to": {
+        "provider": "claude-code",
+        "model": "claude-sonnet-5-5",
+        "effort": "low"
+      },
+      "line": "Set the small builder to Sonnet 5.5 Low on Claude Code: run `openwiz models set small-builder claude-code claude-sonnet-5-5 low` and commit the change."
+    },
+    {
+      "role": "fixer",
+      "to": null,
+      "line": "Set the fixer to follow the builder: run `openwiz models set fixer follows-builder` and commit the change."
+    }
+  ]
+}

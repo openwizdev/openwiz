@@ -1,0 +1,5 @@
+#1804 R1 and R5 green: cargo test -p openwiz-tests --test cli-agent models_forms (run three times), then the models tests and the cli-agent and messaging targets.
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 94 filtered out; finished in <t>
+models: 27 passed; cli-agent: 107 passed; messaging: 9 passed; openwiz-cli unit tests: 22 passed.
+every_write_goes_through_the_directory_it_checked: 400 list --save runs against a thread swapping docs/agents for a link out of the checkout; nothing lands outside.
+a_staged_copy_is_never_more_readable_than_its_target: 40 set runs under a 022 umask over 600 targets; every staged copy seen is 600, and both targets stay 600.

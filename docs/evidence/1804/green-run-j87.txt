@@ -1,0 +1,5 @@
+#1804 J87 green (ruling 16 overturned; rustix =1.1.6, features fs and std): cargo test -p openwiz-tests --test cli-agent models_forms (run three times), then the cli-agent, messaging and checks dependencies targets, and a macOS type-check.
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 94 filtered out; finished in <t>
+cli-agent: 108 passed; messaging: 9 passed; checks dependencies: 2 passed; openwiz-cli unit tests: 22 passed.
+cargo check -p openwiz-cli --target aarch64-apple-darwin and --target x86_64-apple-darwin: no errors, no warnings.
+cargo fmt --check; cargo clippy -p openwiz-core -p openwiz-cli --all-targets, and of the cli-agent, messaging and checks targets, with -D warnings: clean.

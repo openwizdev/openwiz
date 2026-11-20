@@ -1,0 +1,1054 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:openwiz:schema:models:v1",
+  "title": "openwiz.models.v1",
+  "description": "The reports of openwiz models show, list and set, the offered-models snapshot beside docs/agents/fleet.md, and the hand-off lines fixture (spec #1802). contracts/models.v1.md has the rules this schema can't express: the Models table, the follow, fixer and cross-family rules, the older-tables fallback and the exact lines.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/show_report"
+    },
+    {
+      "$ref": "#/$defs/list_report"
+    },
+    {
+      "$ref": "#/$defs/set_report"
+    },
+    {
+      "$ref": "#/$defs/snapshot"
+    },
+    {
+      "$ref": "#/$defs/handoff_fixture"
+    }
+  ],
+  "$defs": {
+    "id": {
+      "description": "A spawn id: a --provider, --model or --reasoning-level value.",
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._-]+$"
+    },
+    "family": {
+      "description": "The model family of a provider: claude-code is claude, codex is gpt; any other provider's is null (unknown).",
+      "enum": [
+        "claude",
+        "gpt",
+        null
+      ]
+    },
+    "names": {
+      "description": "The Harness, Model and Effort cells as people read them.",
+      "type": "object",
+      "required": [
+        "harness",
+        "model",
+        "effort"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "harness": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1
+        },
+        "effort": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "choice": {
+      "description": "One harness, model and effort: the ids spawn uses, their family and the names shown.",
+      "type": "object",
+      "required": [
+        "provider",
+        "model",
+        "effort",
+        "family",
+        "names"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "provider": {
+          "$ref": "#/$defs/id"
+        },
+        "model": {
+          "$ref": "#/$defs/model_id"
+        },
+        "effort": {
+          "$ref": "#/$defs/id"
+        },
+        "family": {
+          "$ref": "#/$defs/family"
+        },
+        "names": {
+          "$ref": "#/$defs/names"
+        }
+      }
+    },
+    "asked": {
+      "description": "The harness, model and effort set was asked for, as typed; set refuses one it can't write.",
+      "type": "object",
+      "required": [
+        "provider",
+        "model",
+        "effort"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "provider": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1
+        },
+        "effort": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "own_role": {
+      "description": "A role with its own row: Builder and Reviewer always.",
+      "type": "object",
+      "required": [
+        "follows",
+        "choice"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "follows": {
+          "type": "null"
+        },
+        "choice": {
+          "$ref": "#/$defs/choice"
+        }
+      }
+    },
+    "any_role": {
+      "description": "A role that may follow the Builder; choice is then the Builder's.",
+      "type": "object",
+      "required": [
+        "follows",
+        "choice"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "follows": {
+          "enum": [
+            null,
+            "builder"
+          ]
+        },
+        "choice": {
+          "$ref": "#/$defs/choice"
+        }
+      }
+    },
+    "roles": {
+      "type": "object",
+      "required": [
+        "orchestrator",
+        "builder",
+        "reviewer",
+        "small_builder",
+        "fixer"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "orchestrator": {
+          "$ref": "#/$defs/any_role"
+        },
+        "builder": {
+          "$ref": "#/$defs/own_role"
+        },
+        "reviewer": {
+          "$ref": "#/$defs/own_role"
+        },
+        "small_builder": {
+          "$ref": "#/$defs/any_role"
+        },
+        "fixer": {
+          "$ref": "#/$defs/any_role"
+        }
+      }
+    },
+    "review": {
+      "description": "Who reviews a pull request whose builder is this family (the cross-family rule), or waits.",
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "from",
+            "choice"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "from": {
+              "enum": [
+                "reviewer",
+                "builder",
+                "older_table"
+              ]
+            },
+            "choice": {
+              "$ref": "#/$defs/choice"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "from",
+            "choice"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "from": {
+              "const": "waits"
+            },
+            "choice": {
+              "type": "null"
+            }
+          }
+        }
+      ]
+    },
+    "fix": {
+      "description": "Who runs the one fresh fix round for a builder of this family (the fixer rule), or waits.",
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "from",
+            "choice"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "from": {
+              "enum": [
+                "fixer",
+                "reviewer",
+                "older_table"
+              ]
+            },
+            "choice": {
+              "$ref": "#/$defs/choice"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "from",
+            "choice"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "from": {
+              "const": "waits"
+            },
+            "choice": {
+              "type": "null"
+            }
+          }
+        }
+      ]
+    },
+    "reviews": {
+      "type": "object",
+      "required": [
+        "claude",
+        "gpt"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "claude": {
+          "$ref": "#/$defs/review"
+        },
+        "gpt": {
+          "$ref": "#/$defs/review"
+        }
+      }
+    },
+    "fixers": {
+      "type": "object",
+      "required": [
+        "claude",
+        "gpt"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "claude": {
+          "$ref": "#/$defs/fix"
+        },
+        "gpt": {
+          "$ref": "#/$defs/fix"
+        }
+      }
+    },
+    "warning": {
+      "description": "same_family: the Reviewer and Builder share a family, so that family's work waits for review. older_table_kept: while the older tables are present, an older row differs from what the Models table resolves to (set kept it, ruling 14); its text is exactly 'Models table: <models_table>; older <table> table kept at <older>; fleets start <older> until launch-fleet reads the Models table (MD4)'.",
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "kind",
+            "family",
+            "text"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "same_family"
+            },
+            "family": {
+              "enum": [
+                "claude",
+                "gpt"
+              ]
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "kind",
+            "table",
+            "models_table",
+            "older",
+            "text"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "older_table_kept"
+            },
+            "table": {
+              "enum": [
+                "Builder",
+                "Builder for small tickets",
+                "Reviewer for Claude-built",
+                "Reviewer for GPT-built",
+                "Fixer, Claude",
+                "Fixer, GPT"
+              ]
+            },
+            "models_table": {
+              "type": "string",
+              "minLength": 1
+            },
+            "older": {
+              "type": "string",
+              "minLength": 1
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/warning"
+      },
+      "maxItems": 7
+    },
+    "show_report": {
+      "description": "openwiz models show --json.",
+      "type": "object",
+      "required": [
+        "schema",
+        "file",
+        "read",
+        "older_tables_present",
+        "roles",
+        "reviews",
+        "fixers",
+        "warnings"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "const": "openwiz.models-show.v1"
+        },
+        "file": {
+          "const": "docs/agents/fleet.md"
+        },
+        "read": {
+          "enum": [
+            "models_table",
+            "older_tables"
+          ]
+        },
+        "older_tables_present": {
+          "type": "boolean"
+        },
+        "roles": {
+          "$ref": "#/$defs/roles"
+        },
+        "reviews": {
+          "$ref": "#/$defs/reviews"
+        },
+        "fixers": {
+          "$ref": "#/$defs/fixers"
+        },
+        "warnings": {
+          "$ref": "#/$defs/warnings"
+        }
+      }
+    },
+    "model_option": {
+      "type": "object",
+      "required": [
+        "model",
+        "efforts"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "model": {
+          "type": "string",
+          "minLength": 1
+        },
+        "efforts": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        }
+      },
+      "description": "One offered model and its efforts, exactly as openwiz models --json lists them; ids outside the Models table's id form are listed but can't be set."
+    },
+    "harness_option": {
+      "type": "object",
+      "required": [
+        "harness",
+        "provider",
+        "models"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "harness": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provider": {
+          "type": "string",
+          "minLength": 1
+        },
+        "models": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/model_option"
+          }
+        }
+      }
+    },
+    "unavailable_harness": {
+      "type": "object",
+      "required": [
+        "harness",
+        "reason",
+        "text"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "harness": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reason": {
+          "enum": [
+            "catalogue_not_reported",
+            "id_mapping_not_verified",
+            "no_offered_effort"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "state": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "offered"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "kind",
+            "reason",
+            "text"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "no_options"
+            },
+            "reason": {
+              "enum": [
+                "not_ready",
+                "harnesses_not_reported",
+                "read_failed",
+                "unexpected_shape"
+              ]
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "recommendation": {
+      "description": "A recommended choice, its source, and whether this read offers it; marked recommended only when offered.",
+      "type": "object",
+      "required": [
+        "choice",
+        "source",
+        "offered"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "choice": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/choice"
+            }
+          ]
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "offered": {
+          "type": "boolean"
+        }
+      }
+    },
+    "snapshot": {
+      "description": "docs/agents/models-offered.json, and the offered list in openwiz models list --json.",
+      "type": "object",
+      "required": [
+        "schema",
+        "read_at",
+        "label",
+        "state",
+        "harnesses",
+        "unavailable",
+        "recommended"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "const": "openwiz.models-offered.v1"
+        },
+        "read_at": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "label": {
+          "const": "as reported by CloudRoom; it may answer from a saved copy"
+        },
+        "state": {
+          "$ref": "#/$defs/state"
+        },
+        "harnesses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/harness_option"
+          }
+        },
+        "unavailable": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/unavailable_harness"
+          }
+        },
+        "recommended": {
+          "type": "object",
+          "required": [
+            "orchestrator",
+            "builder",
+            "reviewer"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "orchestrator": {
+              "$ref": "#/$defs/recommendation"
+            },
+            "builder": {
+              "$ref": "#/$defs/recommendation"
+            },
+            "reviewer": {
+              "$ref": "#/$defs/recommendation"
+            }
+          }
+        }
+      }
+    },
+    "list_report": {
+      "description": "openwiz models list [--save] --json.",
+      "type": "object",
+      "required": [
+        "schema",
+        "offered",
+        "saved"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "const": "openwiz.models-list.v1"
+        },
+        "offered": {
+          "$ref": "#/$defs/snapshot"
+        },
+        "saved": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "const": "docs/agents/models-offered.json"
+            }
+          ]
+        }
+      }
+    },
+    "set_report": {
+      "description": "openwiz models set ... --json: changed or unchanged, refused (not offered, or not writable to the Models table), or nothing offered.",
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "schema",
+            "role",
+            "asked",
+            "before",
+            "outcome",
+            "after",
+            "models_table_added",
+            "older_tables",
+            "files",
+            "warnings",
+            "refusal",
+            "offered"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "schema": {
+              "const": "openwiz.models-set.v1"
+            },
+            "role": {
+              "enum": [
+                "orchestrator",
+                "builder",
+                "reviewer",
+                "small_builder",
+                "fixer"
+              ]
+            },
+            "asked": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/asked"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "follows"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "follows": {
+                      "const": "builder"
+                    }
+                  }
+                }
+              ]
+            },
+            "before": {
+              "$ref": "#/$defs/any_role"
+            },
+            "outcome": {
+              "enum": [
+                "changed",
+                "unchanged"
+              ]
+            },
+            "after": {
+              "$ref": "#/$defs/any_role"
+            },
+            "models_table_added": {
+              "type": "boolean"
+            },
+            "older_tables": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "table",
+                  "outcome"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "table": {
+                    "enum": [
+                      "Builder",
+                      "Builder for small tickets",
+                      "Reviewer for Claude-built",
+                      "Reviewer for GPT-built",
+                      "Fixer, Claude",
+                      "Fixer, GPT"
+                    ]
+                  },
+                  "outcome": {
+                    "enum": [
+                      "changed",
+                      "unchanged",
+                      "kept"
+                    ]
+                  }
+                }
+              },
+              "maxItems": 6
+            },
+            "files": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "docs/agents/fleet.md",
+                  "docs/agents/models-offered.json"
+                ]
+              },
+              "uniqueItems": true,
+              "maxItems": 2
+            },
+            "warnings": {
+              "$ref": "#/$defs/warnings"
+            },
+            "refusal": {
+              "type": "null"
+            },
+            "offered": {
+              "type": "null"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "schema",
+            "role",
+            "asked",
+            "before",
+            "outcome",
+            "after",
+            "models_table_added",
+            "older_tables",
+            "files",
+            "warnings",
+            "refusal",
+            "offered"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "schema": {
+              "const": "openwiz.models-set.v1"
+            },
+            "role": {
+              "enum": [
+                "orchestrator",
+                "builder",
+                "reviewer",
+                "small_builder",
+                "fixer"
+              ]
+            },
+            "asked": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/asked"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "follows"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "follows": {
+                      "const": "builder"
+                    }
+                  }
+                }
+              ]
+            },
+            "before": {
+              "$ref": "#/$defs/any_role"
+            },
+            "outcome": {
+              "const": "refused"
+            },
+            "after": {
+              "type": "null"
+            },
+            "models_table_added": {
+              "const": false
+            },
+            "older_tables": {
+              "type": "array",
+              "maxItems": 0
+            },
+            "files": {
+              "type": "array",
+              "maxItems": 0
+            },
+            "warnings": {
+              "type": "array",
+              "maxItems": 0
+            },
+            "refusal": {
+              "type": "object",
+              "required": [
+                "reason",
+                "text"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "reason": {
+                  "enum": [
+                    "not_offered",
+                    "not_writable"
+                  ]
+                },
+                "text": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "offered": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/harness_option"
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "schema",
+            "role",
+            "asked",
+            "before",
+            "outcome",
+            "after",
+            "models_table_added",
+            "older_tables",
+            "files",
+            "warnings",
+            "refusal",
+            "offered"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "schema": {
+              "const": "openwiz.models-set.v1"
+            },
+            "role": {
+              "enum": [
+                "orchestrator",
+                "builder",
+                "reviewer",
+                "small_builder",
+                "fixer"
+              ]
+            },
+            "asked": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/asked"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "follows"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "follows": {
+                      "const": "builder"
+                    }
+                  }
+                }
+              ]
+            },
+            "before": {
+              "$ref": "#/$defs/any_role"
+            },
+            "outcome": {
+              "const": "no_options"
+            },
+            "after": {
+              "type": "null"
+            },
+            "models_table_added": {
+              "const": false
+            },
+            "older_tables": {
+              "type": "array",
+              "maxItems": 0
+            },
+            "files": {
+              "type": "array",
+              "maxItems": 0
+            },
+            "warnings": {
+              "type": "array",
+              "maxItems": 0
+            },
+            "refusal": {
+              "type": "object",
+              "required": [
+                "reason",
+                "text"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "reason": {
+                  "const": "no_options"
+                },
+                "text": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "offered": {
+              "type": "null"
+            }
+          }
+        }
+      ]
+    },
+    "handoff_fixture": {
+      "description": "The hand-off lines fixture: each role's exact line for its choice.",
+      "type": "object",
+      "required": [
+        "schema",
+        "lines"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "const": "openwiz.models-handoff.v1"
+        },
+        "lines": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "role",
+              "to",
+              "line"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "role": {
+                "enum": [
+                  "orchestrator",
+                  "builder",
+                  "reviewer",
+                  "small_builder",
+                  "fixer"
+                ]
+              },
+              "to": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "$ref": "#/$defs/settable"
+                  }
+                ]
+              },
+              "line": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "settable": {
+      "description": "A harness, model and effort the Models table can hold: each id of its id form.",
+      "type": "object",
+      "required": [
+        "provider",
+        "model",
+        "effort"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "provider": {
+          "$ref": "#/$defs/id"
+        },
+        "model": {
+          "$ref": "#/$defs/model_id"
+        },
+        "effort": {
+          "$ref": "#/$defs/id"
+        }
+      }
+    },
+    "model_id": {
+      "description": "A model id: one or more segments of letters, digits, '.', '_' and '-', joined by '/', with no empty segment and no leading or trailing '/' (so vendor/demo is one). Exactly one branch matches a good id: the third also matches any id holding '//', so such an id matches two branches and is refused.",
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]$"
+        },
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-][A-Za-z0-9._/-]*[A-Za-z0-9._-]$"
+        },
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-][A-Za-z0-9._/-]*//[A-Za-z0-9._/-]*[A-Za-z0-9._-]$"
+        }
+      ]
+    }
+  }
+}

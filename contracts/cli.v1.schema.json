@@ -268,7 +268,8 @@
               "create",
               "stage",
               "delete",
-              "loop_switch"
+              "loop_switch",
+              "project_write"
             ]
           }
         },

@@ -1,0 +1,20 @@
+#1804 red run: cargo test -p openwiz-tests --test cli-agent models_forms, at the stub run_models_in (today's models: show, list and set are usage errors).
+models_forms::set_follows_builder_reads_nothing_and_an_unchanged_set_leaves_the_file --- FAILED
+models_forms::show_prints_every_contract_fixtures_reading_and_reads_nothing_else --- FAILED
+models_forms::list_offers_the_read_with_recommendations_and_saves_only_when_asked --- FAILED
+models_forms::set_does_what_every_contract_case_says_and_writes_only_its_files --- FAILED
+models_forms::the_text_forms_print_the_contracts_lines --- FAILED
+models_forms::usage_errors_nothing_offered_and_no_fleet_md_change_nothing --- FAILED
+thread 'models_forms::set_follows_builder_reads_nothing_and_an_unchanged_set_leaves_the_file' panicked at tests/cli-agent/models_forms.rs:74:5:
+thread 'models_forms::show_prints_every_contract_fixtures_reading_and_reads_nothing_else' panicked at tests/cli-agent/models_forms.rs:109:9:
+  left: (2, "openwiz: models takes only --json, not show; nothing was read (see openwiz --help)\n")
+ right: (0, "")
+thread 'models_forms::list_offers_the_read_with_recommendations_and_saves_only_when_asked' panicked at tests/cli-agent/models_forms.rs:74:5:
+thread 'models_forms::set_does_what_every_contract_case_says_and_writes_only_its_files' panicked at tests/cli-agent/models_forms.rs:155:9:
+  left: 2
+ right: Number(0)
+thread 'models_forms::the_text_forms_print_the_contracts_lines' panicked at tests/cli-agent/models_forms.rs:178:5:
+  left: 2
+ right: 0
+thread 'models_forms::usage_errors_nothing_offered_and_no_fleet_md_change_nothing' panicked at tests/cli-agent/models_forms.rs:74:5:
+test result: FAILED. 0 passed; 6 failed; 0 ignored; 0 measured; 94 filtered out; finished in <t>

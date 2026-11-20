@@ -1,0 +1,53 @@
+{
+  "schema": "openwiz.models-set.v1",
+  "outcome": "changed",
+  "role": "reviewer",
+  "asked": {
+    "provider": "claude-code",
+    "model": "claude-opus-5-5",
+    "effort": "high"
+  },
+  "before": {
+    "follows": null,
+    "choice": {
+      "provider": "codex",
+      "model": "gpt-6.2-sol",
+      "effort": "medium",
+      "family": "gpt",
+      "names": {
+        "harness": "Codex",
+        "model": "Sol 6.2",
+        "effort": "Medium"
+      }
+    }
+  },
+  "after": {
+    "follows": null,
+    "choice": {
+      "provider": "claude-code",
+      "model": "claude-opus-5-5",
+      "effort": "high",
+      "family": "claude",
+      "names": {
+        "harness": "Claude Code",
+        "model": "Opus 5.5",
+        "effort": "High"
+      }
+    }
+  },
+  "models_table_added": false,
+  "older_tables": [],
+  "files": [
+    "docs/agents/fleet.md",
+    "docs/agents/models-offered.json"
+  ],
+  "warnings": [
+    {
+      "kind": "same_family",
+      "family": "claude",
+      "text": "The Reviewer and the Builder are both Claude models, so reviews of Claude-built work wait (ADR 0008)."
+    }
+  ],
+  "refusal": null,
+  "offered": null
+}

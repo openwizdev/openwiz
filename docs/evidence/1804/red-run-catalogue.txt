@@ -1,0 +1,6 @@
+#1804 red run for the granted catalogue rows: cargo test -p openwiz-tests --test cli-agent cp1_, with the cp1 matrix rows for models.show, models.list and models.set and no catalogue rows yet.
+thread 'cp1_catalogue_covers_the_public_command_flag_and_schema_matrix' panicked at tests/cli-agent/main.rs:151:5:
+assertion `left == right` failed
+  left: 18
+ right: 21
+test result: FAILED. 5 passed; 1 failed; 0 ignored; 0 measured; 95 filtered out; finished in <t>

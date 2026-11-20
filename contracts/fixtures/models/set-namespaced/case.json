@@ -1,0 +1,17 @@
+{
+  "fleet": "one-table/fleet.md",
+  "argv": [
+    "models",
+    "set",
+    "reviewer",
+    "codex",
+    "vendor/demo",
+    "medium",
+    "--json"
+  ],
+  "exit": 0,
+  "writes": {
+    "docs/agents/fleet.md": "set-namespaced/after.md",
+    "docs/agents/models-offered.json": "list/models-offered.json"
+  }
+}

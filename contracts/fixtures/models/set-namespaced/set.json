@@ -1,0 +1,47 @@
+{
+  "schema": "openwiz.models-set.v1",
+  "outcome": "changed",
+  "role": "reviewer",
+  "asked": {
+    "provider": "codex",
+    "model": "vendor/demo",
+    "effort": "medium"
+  },
+  "before": {
+    "follows": null,
+    "choice": {
+      "provider": "codex",
+      "model": "gpt-6.2-sol",
+      "effort": "medium",
+      "family": "gpt",
+      "names": {
+        "harness": "Codex",
+        "model": "Sol 6.2",
+        "effort": "Medium"
+      }
+    }
+  },
+  "after": {
+    "follows": null,
+    "choice": {
+      "provider": "codex",
+      "model": "vendor/demo",
+      "effort": "medium",
+      "family": "gpt",
+      "names": {
+        "harness": "Codex",
+        "model": "vendor/demo",
+        "effort": "Medium"
+      }
+    }
+  },
+  "models_table_added": false,
+  "older_tables": [],
+  "files": [
+    "docs/agents/fleet.md",
+    "docs/agents/models-offered.json"
+  ],
+  "warnings": [],
+  "refusal": null,
+  "offered": null
+}

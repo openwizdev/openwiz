@@ -1,0 +1,23 @@
+#1804 green run: cargo test -p openwiz-tests --test cli-agent models, at ef817eec (the same proof as red-run.txt, plus today's models tests and MD1's contract checks).
+test models::models_exit_codes_and_usage_are_documented ... ok
+test models::models_json_offers_options_under_its_contract_with_exit_0 ... ok
+test models::models_json_keeps_unavailable_harness_with_its_reason_and_explanation ... ok
+test models::models_usage_errors_exit_2_on_stderr_and_read_nothing ... ok
+test models::models_read_failure_exits_13_and_never_prints_the_source_stderr ... ok
+test models_contract::a_malformed_models_table_is_refused_not_guessed ... ok
+test models_contract::every_handoff_line_runs_the_set_it_names ... ok
+test models::models_makes_one_status_read_and_never_spawns_or_tells ... ok
+test models::models_shows_the_options_as_reported_and_no_default ... ok
+test models_contract::every_show_fixture_is_its_fleet_files_reading ... ok
+test models_contract::todays_choices_read_the_same_from_the_one_table_and_the_five_tables ... ok
+test models_contract::every_set_fixture_writes_what_its_report_says ... ok
+test models_forms::list_offers_the_read_with_recommendations_and_saves_only_when_asked ... ok
+test models_forms::a_broken_models_table_is_refused_by_show_and_set_and_never_written ... ok
+test models_contract::the_schema_takes_every_report_fixture_and_refuses_each_malformed_one ... ok
+test models::models_with_nothing_offered_exits_13_with_its_reason ... ok
+test models_forms::set_follows_builder_reads_nothing_and_an_unchanged_set_leaves_the_file ... ok
+test models_forms::the_text_forms_print_the_contracts_lines ... ok
+test models_forms::usage_errors_nothing_offered_and_no_fleet_md_change_nothing ... ok
+test models_forms::show_prints_every_contract_fixtures_reading_and_reads_nothing_else ... ok
+test models_forms::set_does_what_every_contract_case_says_and_writes_only_its_files ... ok
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 80 filtered out; finished in <t>

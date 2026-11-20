@@ -1,0 +1,12 @@
+#1804 m12 red, at 87a77ea7522142bbc22f598d8aaaccb83023e03a: cargo test -p openwiz-tests --test messaging m12 (the reader parsed fleet.md flag cells with quoted flag words).
+thread 'm12_allowlist::no_product_source_spells_an_excluded_flag_or_another_write' panicked at tests/messaging/m12_allowlist.rs:354:13:
+"<root>/crates/core/src/models/mod.rs" contains "--model"
+test result: FAILED. 6 passed; 1 failed; 0 ignored; 0 measured; 2 filtered out; finished in <t>
+
+After the fix: cargo test -p openwiz-tests --test messaging: test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in <t>
+cargo test -p openwiz-tests --test cli-agent models: test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 80 filtered out; finished in <t>
+
+Planner's ruling (fleet #1802): no flag spelling at all in crates/core/src/models/. The core now takes the three flag words as SpawnFlags; the CLI reads them from the allowlist's spawn builder (a synthetic SpawnArgs invocation, built and never run). At the new head:
+cargo test -p openwiz-tests --test messaging: test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in <t>
+cargo test -p openwiz-tests --test cli-agent: test result: ok. 101 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in <t>
+grep for the provider, model and effort flag words in crates/core/src/models/ and crates/cli/src/models.rs: no match.

@@ -1,0 +1,9 @@
+#1804 R1 and R5 (re-check 7040761380) red, at 59515ea29489be8c09cabb5b489c6217b880d94e's code: cargo test -p openwiz-tests --test cli-agent models_forms (R1: list --save while another thread swaps docs/agents for a link out of the checkout and back; R5: set under a 022 umask over owner-only (600) targets, watching the staged copies).
+models_forms::a_staged_copy_is_never_more_readable_than_its_target --- FAILED
+models_forms::every_write_goes_through_the_directory_it_checked --- FAILED
+thread 'models_forms::a_staged_copy_is_never_more_readable_than_its_target' panicked at tests/cli-agent/models_forms.rs:736:5:
+staged copies of 600 targets: ["fleet 644", "models-offered 644"]
+thread 'models_forms::every_write_goes_through_the_directory_it_checked' panicked at tests/cli-agent/models_forms.rs:661:5:
+  left: [".models-offered.json.openwiz-<pid>-<n>", ".models-offered.json.openwiz-<pid>-<n>", ".models-offered.json.openwiz-<pid>-<n>", ".models-offered.json.openwiz-<pid>-<n>", ".models-offered.json.openwiz-<pid>-<n>", ".models-offered.json.openwiz-<pid>-<n>", ".models-offered.json.openwiz-<pid>-<n>", ".models-offered.json.openwiz-<pid>-<n>", ".models-offered.json.openwiz-<pid>-<n>", "fleet.md"]
+ right: ["fleet.md"]
+test result: FAILED. 11 passed; 2 failed; 0 ignored; 0 measured; 94 filtered out; finished in <t>
