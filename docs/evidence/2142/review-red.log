@@ -1,0 +1,332 @@
+..FFFEFFFEFFFE....F...FFFF..
+======================================================================
+ERROR: test_every_downloaded_file_is_checked_before_success_on_every_route (__main__.Download.test_every_downloaded_file_is_checked_before_success_on_every_route) (route='latest', case='truncated')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<python>/http/client.py", line 596, in _read_chunked
+    value.append(self._safe_read(chunk_left))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<python>/http/client.py", line 640, in _safe_read
+    raise IncompleteRead(data, amt - len(data))
+http.client.IncompleteRead: IncompleteRead(267 bytes read, 268 more expected)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 172, in test_every_downloaded_file_is_checked_before_success_on_every_route
+    code, value = self.run_entry('download', '--target', TARGET, '--dir', str(folder), *argv)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 77, in run_entry
+    code = entry.main(list(argv), host=host)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<checkout>/tools/install/install", line 324, in main
+    value, code = download(args.target, args.dir, fetch, args.version), 0
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<checkout>/tools/install/install", line 148, in download
+    archive = fetch(pull.BASE + 'download/v' + manifest['version'] + '/' + manifest['archive'],
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<checkout>/tools/install/pull.py", line 41, in fetch_bytes
+    data = response.read(limit + 1)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<python>/http/client.py", line 464, in read
+    return self._read_chunked(amt)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "<python>/http/client.py", line 602, in _read_chunked
+    raise IncompleteRead(b''.join(value)) from exc
+http.client.IncompleteRead: IncompleteRead(0 bytes read)
+
+======================================================================
+ERROR: test_every_downloaded_file_is_checked_before_success_on_every_route (__main__.Download.test_every_downloaded_file_is_checked_before_success_on_every_route) (route='fallback', case='truncated')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<python>/http/client.py", line 596, in _read_chunked
+    value.append(self._safe_read(chunk_left))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<python>/http/client.py", line 640, in _safe_read
+    raise IncompleteRead(data, amt - len(data))
+http.client.IncompleteRead: IncompleteRead(267 bytes read, 268 more expected)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 172, in test_every_downloaded_file_is_checked_before_success_on_every_route
+    code, value = self.run_entry('download', '--target', TARGET, '--dir', str(folder), *argv)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 77, in run_entry
+    code = entry.main(list(argv), host=host)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<checkout>/tools/install/install", line 324, in main
+    value, code = download(args.target, args.dir, fetch, args.version), 0
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<checkout>/tools/install/install", line 148, in download
+    archive = fetch(pull.BASE + 'download/v' + manifest['version'] + '/' + manifest['archive'],
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<checkout>/tools/install/pull.py", line 41, in fetch_bytes
+    data = response.read(limit + 1)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<python>/http/client.py", line 464, in read
+    return self._read_chunked(amt)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "<python>/http/client.py", line 602, in _read_chunked
+    raise IncompleteRead(b''.join(value)) from exc
+http.client.IncompleteRead: IncompleteRead(0 bytes read)
+
+======================================================================
+ERROR: test_every_downloaded_file_is_checked_before_success_on_every_route (__main__.Download.test_every_downloaded_file_is_checked_before_success_on_every_route) (route='v0.1.0', case='truncated')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<python>/http/client.py", line 596, in _read_chunked
+    value.append(self._safe_read(chunk_left))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<python>/http/client.py", line 640, in _safe_read
+    raise IncompleteRead(data, amt - len(data))
+http.client.IncompleteRead: IncompleteRead(268 bytes read, 268 more expected)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 172, in test_every_downloaded_file_is_checked_before_success_on_every_route
+    code, value = self.run_entry('download', '--target', TARGET, '--dir', str(folder), *argv)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 77, in run_entry
+    code = entry.main(list(argv), host=host)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<checkout>/tools/install/install", line 324, in main
+    value, code = download(args.target, args.dir, fetch, args.version), 0
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<checkout>/tools/install/install", line 148, in download
+    archive = fetch(pull.BASE + 'download/v' + manifest['version'] + '/' + manifest['archive'],
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<checkout>/tools/install/pull.py", line 41, in fetch_bytes
+    data = response.read(limit + 1)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<python>/http/client.py", line 464, in read
+    return self._read_chunked(amt)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "<python>/http/client.py", line 602, in _read_chunked
+    raise IncompleteRead(b''.join(value)) from exc
+http.client.IncompleteRead: IncompleteRead(0 bytes read)
+
+======================================================================
+FAIL: test_every_downloaded_file_is_checked_before_success_on_every_route (__main__.Download.test_every_downloaded_file_is_checked_before_success_on_every_route) (route='latest', case='archive')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 173, in test_every_downloaded_file_is_checked_before_success_on_every_route
+    self.assertEqual((code, value['outcome']), (5, 'refused'), value)
+AssertionError: Tuples differ: (0, 'downloaded') != (5, 'refused')
+
+First differing element 0:
+0
+5
+
+- (0, 'downloaded')
++ (5, 'refused') : {'schema': 'openwiz.download.v1', 'outcome': 'downloaded', 'version': '0.1.0', 'source': '1111111111111111111111111111111111111111', 'target': 'x86_64-unknown-linux-gnu', 'dir': '<tmp>/dl-latest-archive', 'reason': 'Downloaded and checked the manifest; nothing is installed yet.'}
+
+======================================================================
+FAIL: test_every_downloaded_file_is_checked_before_success_on_every_route (__main__.Download.test_every_downloaded_file_is_checked_before_success_on_every_route) (route='latest', case='sums')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 173, in test_every_downloaded_file_is_checked_before_success_on_every_route
+    self.assertEqual((code, value['outcome']), (5, 'refused'), value)
+AssertionError: Tuples differ: (0, 'downloaded') != (5, 'refused')
+
+First differing element 0:
+0
+5
+
+- (0, 'downloaded')
++ (5, 'refused') : {'schema': 'openwiz.download.v1', 'outcome': 'downloaded', 'version': '0.1.0', 'source': '1111111111111111111111111111111111111111', 'target': 'x86_64-unknown-linux-gnu', 'dir': '<tmp>/dl-latest-sums', 'reason': 'Downloaded and checked the manifest; nothing is installed yet.'}
+
+======================================================================
+FAIL: test_every_downloaded_file_is_checked_before_success_on_every_route (__main__.Download.test_every_downloaded_file_is_checked_before_success_on_every_route) (route='latest', case='no sums')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 173, in test_every_downloaded_file_is_checked_before_success_on_every_route
+    self.assertEqual((code, value['outcome']), (5, 'refused'), value)
+AssertionError: Tuples differ: (0, 'downloaded') != (5, 'refused')
+
+First differing element 0:
+0
+5
+
+- (0, 'downloaded')
++ (5, 'refused') : {'schema': 'openwiz.download.v1', 'outcome': 'downloaded', 'version': '0.1.0', 'source': '1111111111111111111111111111111111111111', 'target': 'x86_64-unknown-linux-gnu', 'dir': '<tmp>/dl-latest-no-sums', 'reason': 'Downloaded and checked the manifest; nothing is installed yet.'}
+
+======================================================================
+FAIL: test_every_downloaded_file_is_checked_before_success_on_every_route (__main__.Download.test_every_downloaded_file_is_checked_before_success_on_every_route) (route='fallback', case='archive')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 173, in test_every_downloaded_file_is_checked_before_success_on_every_route
+    self.assertEqual((code, value['outcome']), (5, 'refused'), value)
+AssertionError: Tuples differ: (0, 'downloaded') != (5, 'refused')
+
+First differing element 0:
+0
+5
+
+- (0, 'downloaded')
++ (5, 'refused') : {'schema': 'openwiz.download.v1', 'outcome': 'downloaded', 'version': '0.1.0', 'source': '1111111111111111111111111111111111111111', 'target': 'x86_64-unknown-linux-gnu', 'dir': '<tmp>/dl-fallback-archive', 'reason': 'Downloaded and checked the manifest; nothing is installed yet.'}
+
+======================================================================
+FAIL: test_every_downloaded_file_is_checked_before_success_on_every_route (__main__.Download.test_every_downloaded_file_is_checked_before_success_on_every_route) (route='fallback', case='sums')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 173, in test_every_downloaded_file_is_checked_before_success_on_every_route
+    self.assertEqual((code, value['outcome']), (5, 'refused'), value)
+AssertionError: Tuples differ: (0, 'downloaded') != (5, 'refused')
+
+First differing element 0:
+0
+5
+
+- (0, 'downloaded')
++ (5, 'refused') : {'schema': 'openwiz.download.v1', 'outcome': 'downloaded', 'version': '0.1.0', 'source': '1111111111111111111111111111111111111111', 'target': 'x86_64-unknown-linux-gnu', 'dir': '<tmp>/dl-fallback-sums', 'reason': 'Downloaded and checked the manifest; nothing is installed yet.'}
+
+======================================================================
+FAIL: test_every_downloaded_file_is_checked_before_success_on_every_route (__main__.Download.test_every_downloaded_file_is_checked_before_success_on_every_route) (route='fallback', case='no sums')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 173, in test_every_downloaded_file_is_checked_before_success_on_every_route
+    self.assertEqual((code, value['outcome']), (5, 'refused'), value)
+AssertionError: Tuples differ: (0, 'downloaded') != (5, 'refused')
+
+First differing element 0:
+0
+5
+
+- (0, 'downloaded')
++ (5, 'refused') : {'schema': 'openwiz.download.v1', 'outcome': 'downloaded', 'version': '0.1.0', 'source': '1111111111111111111111111111111111111111', 'target': 'x86_64-unknown-linux-gnu', 'dir': '<tmp>/dl-fallback-no-sums', 'reason': 'Downloaded and checked the manifest; nothing is installed yet.'}
+
+======================================================================
+FAIL: test_every_downloaded_file_is_checked_before_success_on_every_route (__main__.Download.test_every_downloaded_file_is_checked_before_success_on_every_route) (route='v0.1.0', case='archive')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 173, in test_every_downloaded_file_is_checked_before_success_on_every_route
+    self.assertEqual((code, value['outcome']), (5, 'refused'), value)
+AssertionError: Tuples differ: (0, 'downloaded') != (5, 'refused')
+
+First differing element 0:
+0
+5
+
+- (0, 'downloaded')
++ (5, 'refused') : {'schema': 'openwiz.download.v1', 'outcome': 'downloaded', 'version': '0.1.0', 'source': '1111111111111111111111111111111111111111', 'target': 'x86_64-unknown-linux-gnu', 'dir': '<tmp>/dl-v0.1.0-archive', 'reason': 'Downloaded and checked the manifest; nothing is installed yet.'}
+
+======================================================================
+FAIL: test_every_downloaded_file_is_checked_before_success_on_every_route (__main__.Download.test_every_downloaded_file_is_checked_before_success_on_every_route) (route='v0.1.0', case='sums')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 173, in test_every_downloaded_file_is_checked_before_success_on_every_route
+    self.assertEqual((code, value['outcome']), (5, 'refused'), value)
+AssertionError: Tuples differ: (0, 'downloaded') != (5, 'refused')
+
+First differing element 0:
+0
+5
+
+- (0, 'downloaded')
++ (5, 'refused') : {'schema': 'openwiz.download.v1', 'outcome': 'downloaded', 'version': '0.1.0', 'source': '1111111111111111111111111111111111111111', 'target': 'x86_64-unknown-linux-gnu', 'dir': '<tmp>/dl-v0.1.0-sums', 'reason': 'Downloaded and checked the manifest; nothing is installed yet.'}
+
+======================================================================
+FAIL: test_every_downloaded_file_is_checked_before_success_on_every_route (__main__.Download.test_every_downloaded_file_is_checked_before_success_on_every_route) (route='v0.1.0', case='no sums')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 173, in test_every_downloaded_file_is_checked_before_success_on_every_route
+    self.assertEqual((code, value['outcome']), (5, 'refused'), value)
+AssertionError: Tuples differ: (0, 'downloaded') != (5, 'refused')
+
+First differing element 0:
+0
+5
+
+- (0, 'downloaded')
++ (5, 'refused') : {'schema': 'openwiz.download.v1', 'outcome': 'downloaded', 'version': '0.1.0', 'source': '1111111111111111111111111111111111111111', 'target': 'x86_64-unknown-linux-gnu', 'dir': '<tmp>/dl-v0.1.0-no-sums', 'reason': 'Downloaded and checked the manifest; nothing is installed yet.'}
+
+======================================================================
+FAIL: test_the_printed_link_commands_carry_a_custom_state_root (__main__.Path_.test_the_printed_link_commands_carry_a_custom_state_root)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 284, in test_the_printed_link_commands_carry_a_custom_state_root
+    self.assertEqual(preview, ['install', 'link', '--root', str(self.root), '--state-root', str(state)])
+AssertionError: Lists differ: ['ins[71 chars]nwiz'] != ['ins[71 chars]nwiz', '--state-root', '<tmp>[16 chars]ate']
+
+Second list contains 2 additional elements.
+First extra element 4:
+'--state-root'
+
+  ['install',
+   'link',
+   '--root',
+-  '<tmp>/synthetic-home/.local/lib/openwiz']
+?                                                     ^
+
++  '<tmp>/synthetic-home/.local/lib/openwiz',
+?                                                     ^
+
++  '--state-root',
++  '<tmp>/synthetic state']
+
+======================================================================
+FAIL: test_install_repairs_a_missing_or_mispermissioned_selected_build (__main__.Repair.test_install_repairs_a_missing_or_mispermissioned_selected_build) (case='missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 250, in test_install_repairs_a_missing_or_mispermissioned_selected_build
+    self.assertEqual((code, value['outcome']), (0, 'installed'), value)
+AssertionError: Tuples differ: (5, 'refused') != (0, 'installed')
+
+First differing element 0:
+5
+0
+
+- (5, 'refused')
++ (0, 'installed') : {'schema': 'openwiz.install-error.v1', 'outcome': 'refused', 'command': 'install', 'reason': 'the step could not be completed safely (FileNotFoundError: No such file or directory); the last good build and owner settings are retained'}
+
+======================================================================
+FAIL: test_install_repairs_a_missing_or_mispermissioned_selected_build (__main__.Repair.test_install_repairs_a_missing_or_mispermissioned_selected_build) (case='mode 0755')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 250, in test_install_repairs_a_missing_or_mispermissioned_selected_build
+    self.assertEqual((code, value['outcome']), (0, 'installed'), value)
+AssertionError: Tuples differ: (5, 'refused') != (0, 'installed')
+
+First differing element 0:
+5
+0
+
+- (5, 'refused')
++ (0, 'installed') : {'schema': 'openwiz.install-error.v1', 'outcome': 'refused', 'command': 'install', 'reason': 'path must be private, owned and have the expected type; the last good build and owner settings are retained'}
+
+======================================================================
+FAIL: test_install_repairs_a_missing_or_mispermissioned_selected_build (__main__.Repair.test_install_repairs_a_missing_or_mispermissioned_selected_build) (case='mode 0000')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 250, in test_install_repairs_a_missing_or_mispermissioned_selected_build
+    self.assertEqual((code, value['outcome']), (0, 'installed'), value)
+AssertionError: Tuples differ: (5, 'refused') != (0, 'installed')
+
+First differing element 0:
+5
+0
+
+- (5, 'refused')
++ (0, 'installed') : {'schema': 'openwiz.install-error.v1', 'outcome': 'refused', 'command': 'install', 'reason': 'the step could not be completed safely (PermissionError: Permission denied); the last good build and owner settings are retained'}
+
+======================================================================
+FAIL: test_install_repairs_a_missing_or_mispermissioned_selected_build (__main__.Repair.test_install_repairs_a_missing_or_mispermissioned_selected_build) (case='interrupted')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 250, in test_install_repairs_a_missing_or_mispermissioned_selected_build
+    self.assertEqual((code, value['outcome']), (0, 'installed'), value)
+AssertionError: Tuples differ: (5, 'refused') != (0, 'installed')
+
+First differing element 0:
+5
+0
+
+- (5, 'refused')
++ (0, 'installed') : {'schema': 'openwiz.install-error.v1', 'outcome': 'refused', 'command': 'install', 'reason': 'the step could not be completed safely (FileNotFoundError: No such file or directory); the last good build and owner settings are retained'}
+
+----------------------------------------------------------------------
+Ran 14 tests in 7.126s
+
+FAILED (failures=14, errors=3)

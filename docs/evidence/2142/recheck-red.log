@@ -1,0 +1,13 @@
+...........F...
+======================================================================
+FAIL: test_a_retry_after_an_interrupted_repair_keeps_the_source_bound_to_its_manifest (__main__.Repair.test_a_retry_after_an_interrupted_repair_keeps_the_source_bound_to_its_manifest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 265, in test_a_retry_after_an_interrupted_repair_keeps_the_source_bound_to_its_manifest
+    self.assertEqual(code, 5, value)
+AssertionError: 0 != 5 : {'schema': 'openwiz.install-result.v1', 'version': '0.1.0', 'source': '1111111111111111111111111111111111111111', 'target': 'x86_64-unknown-linux-gnu', 'build': '<tmp>/synthetic-home/.local/lib/openwiz/state/service/builds/1111111111111111111111111111111111111111', 'state_root': '<tmp>/synthetic-home/.local/lib/openwiz/state', 'activated': True, 'repaired': False, 'outcome': 'installed', 'openwiz': '<tmp>/synthetic-home/.local/lib/openwiz/current/openwiz', 'next': 'openwiz is at <tmp>/synthetic-home/.local/lib/openwiz/current/openwiz; it is not on PATH. For a link at <tmp>/synthetic-home/.local/bin/openwiz, run install link --root <tmp>/synthetic-home/.local/lib/openwiz to preview it, then again with --yes.'}
+
+----------------------------------------------------------------------
+Ran 15 tests in 8.126s
+
+FAILED (failures=1)

@@ -1,0 +1,157 @@
+EFFEEFEFEEEEEEFF
+======================================================================
+ERROR: test_a_404_on_latest_falls_back_to_the_newest_published_tag (__main__.Download.test_a_404_on_latest_falls_back_to_the_newest_published_tag)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 99, in test_a_404_on_latest_falls_back_to_the_newest_published_tag
+    self.assertEqual((code, value['outcome'], value['version']), (0, 'downloaded', '0.1.0'), value)
+                                              ~~~~~^^^^^^^^^^^
+KeyError: 'version'
+
+======================================================================
+ERROR: test_version_downloads_that_tag_only (__main__.Download.test_version_downloads_that_tag_only) (version='v0.1.0')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 119, in test_version_downloads_that_tag_only
+    self.assertEqual((code, value['version']), (0, '0.1.0'), value)
+                            ~~~~~^^^^^^^^^^^
+KeyError: 'version'
+
+======================================================================
+ERROR: test_version_downloads_that_tag_only (__main__.Download.test_version_downloads_that_tag_only) (version='0.1.0')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 119, in test_version_downloads_that_tag_only
+    self.assertEqual((code, value['version']), (0, '0.1.0'), value)
+                            ~~~~~^^^^^^^^^^^
+KeyError: 'version'
+
+======================================================================
+ERROR: test_install_prints_where_openwiz_is_and_link_previews_then_links_on_yes (__main__.Path_.test_install_prints_where_openwiz_is_and_link_previews_then_links_on_yes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 198, in test_install_prints_where_openwiz_is_and_link_previews_then_links_on_yes
+    self.assertEqual(value['openwiz'], str(self.root / 'current/openwiz'))
+                     ~~~~~^^^^^^^^^^^
+KeyError: 'openwiz'
+
+======================================================================
+ERROR: test_an_unreadable_glibc_is_refused_and_macos_has_no_glibc_check (__main__.Preflight.test_an_unreadable_glibc_is_refused_and_macos_has_no_glibc_check)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 165, in test_an_unreadable_glibc_is_refused_and_macos_has_no_glibc_check
+    self.assertEqual((code, check[0]['state']), (5, 'refused'))
+                            ~~~~~^^^
+IndexError: list index out of range
+
+======================================================================
+ERROR: test_linux_accepts_glibc_2_34_and_later (__main__.Preflight.test_linux_accepts_glibc_2_34_and_later) (found='2.34')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 159, in test_linux_accepts_glibc_2_34_and_later
+    self.assertEqual(check[0]['state'], 'ok', check)
+                     ~~~~~^^^
+IndexError: list index out of range
+
+======================================================================
+ERROR: test_linux_accepts_glibc_2_34_and_later (__main__.Preflight.test_linux_accepts_glibc_2_34_and_later) (found='2.36')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 159, in test_linux_accepts_glibc_2_34_and_later
+    self.assertEqual(check[0]['state'], 'ok', check)
+                     ~~~~~^^^
+IndexError: list index out of range
+
+======================================================================
+ERROR: test_linux_accepts_glibc_2_34_and_later (__main__.Preflight.test_linux_accepts_glibc_2_34_and_later) (found='2.40')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 159, in test_linux_accepts_glibc_2_34_and_later
+    self.assertEqual(check[0]['state'], 'ok', check)
+                     ~~~~~^^^
+IndexError: list index out of range
+
+======================================================================
+ERROR: test_linux_refuses_a_glibc_older_than_2_34_and_names_the_version_found (__main__.Preflight.test_linux_refuses_a_glibc_older_than_2_34_and_names_the_version_found)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 150, in test_linux_refuses_a_glibc_older_than_2_34_and_names_the_version_found
+    self.assertEqual((code, value['ready'], check[0]['state']), (5, False, 'refused'))
+                                            ~~~~~^^^
+IndexError: list index out of range
+
+======================================================================
+ERROR: test_install_replaces_a_build_that_fails_verification (__main__.Repair.test_install_replaces_a_build_that_fails_verification)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 181, in test_install_replaces_a_build_that_fails_verification
+    self.assertEqual((code, value['outcome'], value['repaired']), (0, 'installed', True), value)
+                                              ~~~~~^^^^^^^^^^^^
+KeyError: 'repaired'
+
+======================================================================
+FAIL: test_a_tag_whose_manifest_names_another_version_is_refused (__main__.Download.test_a_tag_whose_manifest_names_another_version_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 130, in test_a_tag_whose_manifest_names_another_version_is_refused
+    self.assertEqual(code, 5)
+AssertionError: 2 != 5
+
+======================================================================
+FAIL: test_the_refusal_names_the_404_and_its_url (__main__.Download.test_the_refusal_names_the_404_and_its_url)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 108, in test_the_refusal_names_the_404_and_its_url
+    self.assertIn('release asset 404 at ' + pull.BASE + 'latest/download/' + NAME + '.sha256', value['reason'])
+AssertionError: 'release asset 404 at http://127.0.0.1:PORT/openwizdev/OpenWiz/releases/latest/download/openwiz-x86_64-unknown-linux-gnu.sha256' not found in 'the step could not be completed safely; the last good build and owner settings are retained'
+
+======================================================================
+FAIL: test_version_downloads_that_tag_only (__main__.Download.test_version_downloads_that_tag_only)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 122, in test_version_downloads_that_tag_only
+    self.assertEqual(code, 5)
+AssertionError: 2 != 5
+
+======================================================================
+FAIL: test_link_never_replaces_the_users_own_openwiz (__main__.Path_.test_link_never_replaces_the_users_own_openwiz)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 217, in test_link_never_replaces_the_users_own_openwiz
+    self.assertEqual(code, 5)
+AssertionError: 2 != 5
+
+======================================================================
+FAIL: test_status_says_not_installed_on_an_empty_root (__main__.Repair.test_status_says_not_installed_on_an_empty_root) (root=PosixPath('<tmp>/synthetic-home/.local/lib/openwiz'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 191, in test_status_says_not_installed_on_an_empty_root
+    self.assertEqual((code, value['outcome']), (1, 'not installed'), value)
+AssertionError: Tuples differ: (5, 'refused') != (1, 'not installed')
+
+First differing element 0:
+5
+1
+
+- (5, 'refused')
++ (1, 'not installed') : {'schema': 'openwiz.install-error.v1', 'outcome': 'refused', 'command': 'status', 'reason': 'the step could not be completed safely; the last good build and owner settings are retained'}
+
+======================================================================
+FAIL: test_status_says_not_installed_on_an_empty_root (__main__.Repair.test_status_says_not_installed_on_an_empty_root) (root=PosixPath('<tmp>/synthetic-home'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/tools/install/tests/installer/test_installer.py", line 191, in test_status_says_not_installed_on_an_empty_root
+    self.assertEqual((code, value['outcome']), (1, 'not installed'), value)
+AssertionError: Tuples differ: (5, 'refused') != (1, 'not installed')
+
+First differing element 0:
+5
+1
+
+- (5, 'refused')
++ (1, 'not installed') : {'schema': 'openwiz.install-error.v1', 'outcome': 'refused', 'command': 'status', 'reason': 'the step could not be completed safely; the last good build and owner settings are retained'}
+
+----------------------------------------------------------------------
+Ran 11 tests in 5.525s
+
+FAILED (failures=6, errors=10)

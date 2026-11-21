@@ -175,6 +175,36 @@ def verify_installed(build, assets, raw):
     require(actual == set(assets), 'installed asset set mismatch')
 
 
+def damaged(build, assets, raw):
+    try:
+        verify_installed(build, assets, raw)
+        return False
+    except (Refused, OSError):
+        meta = build.lstat()
+        require(stat.S_ISDIR(meta.st_mode) and meta.st_uid == os.getuid(), 'a foreign build is in the way')
+        os.chmod(build, 0o700)
+        stored = build / 'install-manifest.json'
+        try:
+            require(not (stored.exists() or stored.is_symlink())
+                    or (stored.is_file() and not stored.is_symlink() and stored.read_bytes() == raw),
+                    'existing source has a different manifest')
+        except BaseException:
+            os.chmod(build, stat.S_IMODE(meta.st_mode))
+            raise
+        return True
+
+
+def repair_backups(builds, source, raw):
+    found = sorted(builds.glob('.damaged-*-' + source))
+    for backup in found:
+        meta = backup.lstat()
+        require(stat.S_ISDIR(meta.st_mode) and meta.st_uid == os.getuid(), 'a foreign repair backup is in the way')
+        stored = backup / 'install-manifest.json'
+        require(stored.is_file() and not stored.is_symlink() and stored.read_bytes() == raw,
+                'existing source has a different manifest in its repair backup ' + backup.name)
+    return found
+
+
 def activate_link(build, root):
     temporary = root / ('.current-' + str(os.getpid()))
     os.symlink(build, temporary)
@@ -216,7 +246,8 @@ def install(manifest, archive, manifest_sha256, root, target, state_root=None,
             require(link.is_symlink() and link.lstat().st_uid == os.getuid(), 'foreign current selection')
             selected = Path(os.readlink(link))
             require(selected.is_absolute() and selected.parent == builds and digest(selected.name, 40), 'foreign current selection')
-            private(selected)
+            if selected != builds / value['source']:
+                private(selected)
         channel = root / 'channel.json'
         require(channel.exists() or not link.is_symlink(), 'source installation requires an explicit channel migration')
         channel_bytes = b'{"schema":"openwiz.update-channel.v1","channel":"packaged"}\n'
@@ -237,9 +268,9 @@ def install(manifest, archive, manifest_sha256, root, target, state_root=None,
                 require(member.size == item['bytes'] and member.mode == int(item['mode'], 8), 'archive asset metadata mismatch')
                 seen.add(path)
             require(seen == set(assets), 'incomplete archive')
-            if build.exists() or build.is_symlink():
-                verify_installed(build, assets, raw)
-            else:
+            repair = (build.exists() or build.is_symlink()) and damaged(build, assets, raw)
+            if repair or not (build.exists() or build.is_symlink()):
+                backups = repair_backups(builds, value['source'], raw)
                 needed = sum(item['bytes'] for item in assets.values()) + len(raw)
                 require(free_bytes(builds) >= needed, 'insufficient disk space')
                 temporary = Path(tempfile.mkdtemp(prefix='.stage-', dir=builds))
@@ -264,8 +295,21 @@ def install(manifest, archive, manifest_sha256, root, target, state_root=None,
                     verify_installed(temporary, assets, raw)
                     for parent, _, _ in os.walk(temporary, topdown=False):
                         sync(Path(parent))
-                    os.rename(temporary, build)
+                    if repair:
+                        aside = builds / ('.damaged-%d-%s' % (os.getpid(), value['source']))
+                        os.rename(build, aside)
+                        try:
+                            os.rename(temporary, build)
+                        except BaseException:
+                            os.rename(aside, build)
+                            raise
+                        backups.append(aside)
+                    else:
+                        os.rename(temporary, build)
                     sync(builds)
+                    verify_installed(build, assets, raw)
+                    for backup in backups:
+                        shutil.rmtree(backup, ignore_errors=True)
                 finally:
                     if temporary.exists():
                         shutil.rmtree(temporary)
@@ -276,7 +320,7 @@ def install(manifest, archive, manifest_sha256, root, target, state_root=None,
             activate(build, root)
         return {'schema': 'openwiz.install-result.v1', 'version': value['version'], 'source': value['source'],
                 'target': target, 'build': str(build), 'state_root': str(state_root),
-                'activated': not stage_only}
+                'activated': not stage_only, 'repaired': repair}
 
 
 def main():

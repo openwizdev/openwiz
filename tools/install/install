@@ -5,8 +5,10 @@ import os
 from pathlib import Path
 import platform
 import re
+import shlex
 import shutil
 import stat
+import subprocess
 import tarfile
 import sys
 
@@ -16,18 +18,28 @@ DESCRIPTION = """OpenWiz's install entry (#1109): the commands the install skill
 
   install preflight
       Reads this machine only: Python, the supported target, free disk space,
-      and whether room-cli, gh and git are on PATH. It runs none of them.
-  install download --target TARGET --dir PRIVATE_DIR
-      Fetches the latest release's checksum file, manifest and archive from
+      on Linux the glibc version (from ldd --version; 2.34 or later), and
+      whether room-cli, gh and git are on PATH. It runs none of those three.
+  install download --target TARGET --dir PRIVATE_DIR [--version vX.Y.Z]
+      Fetches a release's checksum file, manifest and archive from
       github.com/openwizdev/OpenWiz/releases into a new private folder, within
       their declared sizes, and checks the manifest against the checksum.
+      Without --version it takes the latest release; when latest is a 404 (the
+      newest release is a pre-release), the newest tag in the releases feed.
+      A refusal names the failure, such as "release asset 404 at URL".
   install install --assets PRIVATE_DIR --target TARGET --root ROOT [--state-root STATE]
       Installs those downloaded files with the verified offline installer
       (install.py, contracts/install.v1.md) and selects the build only when
-      every file matched. A refusal keeps the last good build selected.
+      every file matched. A refusal keeps the last good build selected. A
+      build that fails verification is replaced from the verified files. It
+      prints the absolute path of openwiz.
+  install link --root ROOT [--state-root STATE] [--yes]
+      Previews a ~/.local/bin/openwiz link to the selected openwiz; with --yes
+      it makes the link. It never replaces a file already there.
   install status --root ROOT [--state-root STATE]
       Verifies the selected build against its state and reads its identity and
-      update channel. No effects.
+      update channel. No effects. Prints "not installed" and exits 1 when no
+      build is selected at ROOT.
   install skills --root ROOT [--state-root STATE]
       Verifies the selected build, then copies its skills into ROOT/skills and
       into each harness present here: Claude Code, Codex, Cursor, OpenCode and
@@ -49,6 +61,7 @@ import pull
 HOSTS = {('Darwin', 'arm64'): 'aarch64-apple-darwin', ('Darwin', 'x86_64'): 'x86_64-apple-darwin',
          ('Linux', 'x86_64'): 'x86_64-unknown-linux-gnu'}
 DISK = 512 * 1024 * 1024
+GLIBC = (2, 34)
 TOOLS = (('room-cli', 'Install the CloudRoom app and sign in; it provides room-cli.'),
          ('gh', 'Install the GitHub CLI and run gh auth login.'),
          ('git', 'Install git.'))
@@ -62,6 +75,29 @@ class Usage(Exception):
 class Parser(argparse.ArgumentParser):
     def error(self, message):
         raise Usage(message)
+
+
+def glibc(which):
+    ldd = which('ldd')
+    if not ldd:
+        return None
+    try:
+        out = subprocess.run([ldd, '--version'], stdin=subprocess.DEVNULL, capture_output=True,
+                             text=True, timeout=10).stdout
+    except (OSError, subprocess.SubprocessError):
+        return None
+    match = re.search(r'([0-9]+)\.([0-9]+)\s*$', out.splitlines()[0] if out.strip() else '')
+    return (int(match[1]), int(match[2])) if match else None
+
+
+def glibc_check(which):
+    found = glibc(which)
+    needs = "OpenWiz's Linux build needs glibc %d.%d or later; " % GLIBC
+    if found is None:
+        return {'id': 'glibc', 'state': 'refused', 'next': needs + 'could not read the glibc version from ldd --version.'}
+    if found < GLIBC:
+        return {'id': 'glibc', 'state': 'refused', 'next': needs + 'this machine has glibc %d.%d.' % found}
+    return {'id': 'glibc', 'state': 'ok', 'next': 'glibc %d.%d is enough.' % found}
 
 
 def preflight(host, which, disk):
@@ -78,13 +114,16 @@ def preflight(host, which, disk):
     checks.append({'id': 'disk', 'state': 'ok' if free is not None and free >= DISK else 'refused',
                    'next': 'Enough free space.' if free is not None and free >= DISK
                    else 'Free at least 512 MB in your home folder.'})
+    if host[0] == 'Linux':
+        checks.append(glibc_check(which))
     for tool, missing in TOOLS:
         found = which(tool) is not None
         checks.append({'id': tool, 'state': 'ok' if found else 'missing',
                        'next': 'Found on PATH; setup checks it.' if found else missing})
-    ready = all(check['state'] == 'ok' for check in checks[:3])
+    ready = all(check['state'] == 'ok' for check in checks if check['id'] not in dict(TOOLS))
     return {'schema': 'openwiz.preflight.v1', 'ready': ready, 'target': target, 'checks': checks,
-            'reason': 'Read this machine only; nothing was installed or run.'}, 0 if ready else 5
+            'reason': 'Read this machine only' + (', running only ldd --version' if host[0] == 'Linux' else '')
+            + '; nothing was installed.'}, 0 if ready else 5
 
 
 def fresh_private(folder):
@@ -103,26 +142,43 @@ def write_private(path, data):
         handle.write(data)
 
 
-def download(target, folder, fetch):
-    installer.require(target in installer.TARGETS, 'unsupported package target')
+def download(target, folder, fetch, version=None):
     name = 'openwiz-' + target
-    sums = fetch(pull.BASE + 'latest/download/' + name + '.sha256', 256)
-    match = re.fullmatch(rb'([0-9a-f]{64})  ' + re.escape((name + '.manifest.json').encode()) + rb'\n', sums)
-    installer.require(match, 'invalid published manifest checksum')
-    checksum = match[1].decode('ascii')
-    raw = fetch(pull.BASE + 'latest/download/' + name + '.manifest.json', 4 * 1024 * 1024)
-    manifest = pull.load(raw, checksum, target)
+    sums, raw, manifest, _ = pull.published(target, fetch, version)
     installer.require(ARCHIVE_NAME.fullmatch(manifest['archive']), 'invalid published archive name')
-    archive = fetch(pull.BASE + 'download/v' + manifest['version'] + '/' + manifest['archive'],
-                    manifest['archive_bytes'])
+    prefix = pull.BASE + 'download/v' + manifest['version'] + '/'
+    archive = fetch(prefix + manifest['archive'], manifest['archive_bytes'])
     installer.require(len(archive) == manifest['archive_bytes'], 'incomplete archive download')
+    installer.require(installer.sha(archive) == manifest['archive_sha256'], 'archive checksum mismatch at '
+                      + prefix + manifest['archive'])
+    listed = release_sums(fetch(prefix + 'SHA256SUMS', 64 * 1024))
+    for file, data in (('openwiz-%s-%s.manifest.json' % (manifest['version'], target), raw),
+                       (manifest['archive'], archive)):
+        installer.require(file in listed, 'SHA256SUMS does not list ' + file)
+        installer.require(listed[file] == installer.sha(data), 'SHA256SUMS does not match ' + file)
     folder = fresh_private(folder)
     write_private(folder / (name + '.sha256'), sums)
     write_private(folder / (name + '.manifest.json'), raw)
     write_private(folder / manifest['archive'], archive)
     return {'schema': 'openwiz.download.v1', 'outcome': 'downloaded', 'version': manifest['version'],
             'source': manifest['source'], 'target': target, 'dir': str(folder),
-            'reason': 'Downloaded and checked the manifest; nothing is installed yet.'}
+            'reason': 'Downloaded and checked every file against its published checksums; nothing is installed yet.'}
+
+
+def release_sums(data):
+    listed = {}
+    for line in data.decode('ascii', 'replace').splitlines():
+        match = re.fullmatch(r'([0-9a-f]{64})  ([A-Za-z0-9_.-]+)', line)
+        installer.require(match and match[2] not in listed, 'invalid SHA256SUMS line')
+        listed[match[2]] = match[1]
+    return listed
+
+
+def release_version(value):
+    match = re.fullmatch(r'v?(0\.[0-9]+\.[0-9]+)', value)
+    if not match:
+        raise argparse.ArgumentTypeError('expected a release tag such as v0.1.0')
+    return match[1]
 
 
 def prepare_parent(root):
@@ -164,7 +220,49 @@ def install(assets, target, root, state_root):
     prepare_parent(root)
     result = installer.install(manifest_file, assets / manifest['archive'], match[1].decode('ascii'),
                                Path(root), target, state_root=state_root)
-    return dict(result, outcome='installed')
+    program, path, state = link_state(root)
+    where = 'openwiz is at %s' % program
+    return dict(result, outcome='installed', openwiz=str(program), next=(
+        where + ', linked from %s.' % path if state == 'linked' else
+        where + '; %s already exists, so no link is offered.' % path if state == 'taken' else
+        where + '; it is not on PATH. For a link at %s, run %s to preview it, '
+        'then again with --yes.' % (path, link_command(root, state_root))))
+
+
+def link_command(root, state_root):
+    return 'install link --root ' + shlex.quote(str(root)) + (
+        ' --state-root ' + shlex.quote(str(state_root)) if state_root else '')
+
+
+def link_state(root):
+    program = Path(root) / 'current' / 'openwiz'
+    path = Path.home() / '.local' / 'bin' / 'openwiz'
+    if path.is_symlink() and os.readlink(path) == str(program):
+        return program, path, 'linked'
+    return program, path, 'taken' if path.exists() or path.is_symlink() else 'free'
+
+
+def link(root, yes, state_root=None):
+    selected(root, state_root)
+    program, path, state = link_state(root)
+    installer.require(state != 'taken', '%s already exists and is not a link to %s; it was left as it is'
+                      % (path, program))
+    on_path = str(path.parent) in os.environ.get('PATH', '').split(os.pathsep)
+    value = {'schema': 'openwiz.install-link.v1', 'link': str(path), 'to': str(program), 'on_path': on_path}
+    if state == 'free' and not yes:
+        return dict(value, outcome='preview', effects=['Make %s a link to %s, creating its folder if missing.'
+                                                        % (path, program)],
+                    next='Run %s --yes to make it.' % link_command(root, state_root))
+    if state == 'free':
+        prepare_parent(path)
+        os.symlink(str(program), path)
+    return dict(value, outcome='linked', next='Run openwiz from any terminal.' if on_path else
+                'Add %s to PATH to run openwiz by name.' % path.parent)
+
+
+def installed(root):
+    root = Path(root)
+    return root.is_absolute() and (root / 'current').is_symlink()
 
 
 def selected(root, state_root=None):
@@ -197,10 +295,14 @@ def selected(root, state_root=None):
 
 
 def status(root, state_root):
+    if Path(root).is_absolute() and not installed(root):
+        return {'schema': 'openwiz.install-status.v1', 'outcome': 'not installed', 'root': str(root),
+                'reason': 'No build is selected here; nothing was changed.',
+                'next': 'Run install download, then install install.'}, 1
     build, state, value, channel = selected(root, state_root)
     return {'schema': 'openwiz.install-status.v1', 'outcome': 'installed', 'version': value['version'],
             'source': value['source'], 'target': value['target'], 'channel': channel, 'build': str(build),
-            'state_root': str(state), 'reason': 'Read and verified the selected build only; nothing was changed.'}
+            'state_root': str(state), 'reason': 'Read and verified the selected build only; nothing was changed.'}, 0
 
 
 def main(argv=None, fetch=pull.fetch_bytes, host=None, stdout=None):
@@ -211,11 +313,16 @@ def main(argv=None, fetch=pull.fetch_bytes, host=None, stdout=None):
     d = commands.add_parser('download')
     d.add_argument('--target', required=True)
     d.add_argument('--dir', required=True)
+    d.add_argument('--version', type=release_version)
     i = commands.add_parser('install')
     i.add_argument('--assets', required=True)
     i.add_argument('--target', required=True)
     i.add_argument('--root', required=True)
     i.add_argument('--state-root')
+    n = commands.add_parser('link')
+    n.add_argument('--root', required=True)
+    n.add_argument('--state-root')
+    n.add_argument('--yes', action='store_true')
     s = commands.add_parser('status')
     s.add_argument('--root', required=True)
     s.add_argument('--state-root')
@@ -236,19 +343,25 @@ def main(argv=None, fetch=pull.fetch_bytes, host=None, stdout=None):
                     return None
             value, code = preflight(host or (platform.system(), platform.machine()), shutil.which, disk)
         elif args.command == 'download':
-            value, code = download(args.target, args.dir, fetch), 0
+            value, code = download(args.target, args.dir, fetch, args.version), 0
         elif args.command == 'install':
             value, code = install(args.assets, args.target, args.root, args.state_root), 0
         elif args.command == 'skills':
             build, _, manifest, _ = selected(args.root, args.state_root)
             value, code = harness.install_skills(build, manifest, args.root, Path.home(),
                                                  os.environ.get('CODEX_HOME'))
+        elif args.command == 'link':
+            value, code = link(args.root, args.yes, args.state_root), 0
         else:
-            value, code = status(args.root, args.state_root), 0
+            value, code = status(args.root, args.state_root)
     except (installer.Refused, OSError, ValueError, KeyError, TypeError, tarfile.TarError) as refusal:
-        reason = str(refusal) if isinstance(refusal, installer.Refused) else 'the step could not be completed safely'
+        reason = str(refusal) if isinstance(refusal, installer.Refused) else (
+            'the step could not be completed safely (%s%s)' % (type(refusal).__name__,
+                                                             ': ' + refusal.strerror if getattr(refusal, 'strerror', None) else ''))
+        kept = ('; the last good build and owner settings are retained'
+                if installed(getattr(args, 'root', None) or '.') else '; no build was selected or changed')
         print(json.dumps({'schema': 'openwiz.install-error.v1', 'outcome': 'refused', 'command': args.command,
-                          'reason': reason + '; the last good build and owner settings are retained'}), file=out)
+                          'reason': reason + kept}), file=out)
         return 5
     print(json.dumps(value, separators=(',', ':')), file=out)
     return code

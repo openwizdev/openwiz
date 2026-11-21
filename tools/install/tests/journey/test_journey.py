@@ -150,10 +150,11 @@ def release(folder, source='1' * 40, tamper=False):
                            'target': TARGET, 'setup_api': 1, 'archive': archive_name,
                            'archive_sha256': sha(archive), 'archive_bytes': len(archive),
                            'assets': rows}).encode()
+    sums = f'{sha(manifest)}  openwiz-{VERSION}-{TARGET}.manifest.json\n{sha(archive)}  {archive_name}\n'.encode()
     if tamper:
         archive = archive[:-1] + bytes([archive[-1] ^ 1])
     files = {NAME + '.sha256': f'{sha(manifest)}  {NAME}.manifest.json\n'.encode(),
-             NAME + '.manifest.json': manifest, archive_name: archive}
+             NAME + '.manifest.json': manifest, archive_name: archive, 'SHA256SUMS': sums}
     for name, data in files.items():
         (folder / name).write_bytes(data)
     return {'assets': assets, 'archive': archive_name, 'files': files}
@@ -398,7 +399,7 @@ class InstallJourney(unittest.TestCase):
             self.assertEqual(report['target'], TARGET)
             self.assertTrue(report['ready'])
             ids = [check['id'] for check in report['checks']]
-            self.assertEqual(ids, ['python', 'target', 'disk', 'room-cli', 'gh', 'git'])
+            self.assertEqual(ids, ['python', 'target', 'disk', 'glibc', 'room-cli', 'gh', 'git'])
             self.assertNotIn('cargo', result.stdout)
 
         def verified_install():
@@ -406,7 +407,8 @@ class InstallJourney(unittest.TestCase):
             self.assertEqual((result['version'], result['target'], result['activated']), (VERSION, TARGET, True))
             self.assertEqual(transport.urls, [BASE + f'latest/download/{NAME}.sha256',
                                               BASE + f'latest/download/{NAME}.manifest.json',
-                                              BASE + f'download/v{VERSION}/{published["archive"]}'])
+                                              BASE + f'download/v{VERSION}/{published["archive"]}',
+                                              BASE + f'download/v{VERSION}/SHA256SUMS'])
             self.build = Path(result['build'])
             self.state = Path(result['state_root'])
             self.assertEqual(Path(os.readlink(c.root / 'current')), self.build)
@@ -495,9 +497,9 @@ class InstallJourney(unittest.TestCase):
         shutil.rmtree(c.downloads)
         out = io.StringIO()
         self.assertEqual(entry().main(['download', '--target', TARGET, '--dir', str(c.downloads)],
-                                      fetch=Transport(bad), stdout=out), 0, out.getvalue())
-        refused = c.entry('install', '--assets', str(c.downloads), '--target', TARGET, '--root', str(c.root), check=5)
-        self.assertEqual(json.loads(refused.stdout)['outcome'], 'refused')
+                                      fetch=Transport(bad), stdout=out), 5, out.getvalue())
+        self.assertIn('archive checksum mismatch', json.loads(out.getvalue())['reason'])
+        self.assertFalse(c.downloads.exists())
         self.assertEqual(os.readlink(c.root / 'current'), first['build'], 'the last good build stays selected')
         self.assertFalse((c.root / 'state/service/builds' / ('2' * 40)).exists())
 

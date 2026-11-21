@@ -10,6 +10,8 @@ INSTALL = Path(__file__).resolve().parents[2]
 spec = importlib.util.spec_from_file_location('test_install', INSTALL / 'test_install.py')
 base = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(base)
+sys.path.insert(0, str(INSTALL / 'tests' / 'installer'))
+from test_installer import Download, Path_, Preflight, Repair
 
 
 class LinkedConfig(base.HarnessSkills):
@@ -75,8 +77,10 @@ class LinkedConfig(base.HarnessSkills):
 
 
 def load_tests(loader, tests, pattern):
-    return loader.loadTestsFromNames(sorted(name for name in LinkedConfig.__dict__ if name.startswith('test_')),
-                                     LinkedConfig)
+    suite = loader.loadTestsFromNames(sorted(name for name in LinkedConfig.__dict__ if name.startswith('test_')),
+                                      LinkedConfig)
+    suite.addTests(loader.loadTestsFromTestCase(case) for case in (Download, Path_, Preflight, Repair))
+    return suite
 
 
 if __name__ == '__main__':
