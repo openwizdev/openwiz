@@ -1,0 +1,6 @@
+$ python3 -I docs/evidence/2140/check_docs.py <unpacked openwiz-0.1.0-x86_64-unknown-linux-gnu package>
+# at 6764ff7b, with Intel Mac still listed as supported; exit 1
+FAIL README.md:12: stale words: 'Apple silicon and Intel'
+FAIL docs/install.md:15: stale words: 'Apple silicon or Intel'
+FAIL docs/install.md:17: stale words: 'install the CloudRoom app yourself'
+28 links and commands checked, 3 failures

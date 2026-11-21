@@ -1,0 +1,29 @@
+# the guide's repair and removal steps, run with the real v0.1.0 x86_64 Linux package on a fresh synthetic HOME (bash, Python only; no openwiz binary run)
+# <root> already holds keep.txt
+install install: exit 0
+install skills: exit 0
+# ls -A <root>
+channel.json
+current
+install.lock
+keep.txt
+skills
+state
+# repair: change a build file, then delete <root>/current and <build>, install again
+install status: exit 5
+install install: exit 0
+install status: exit 0
+# settings kept: ls <state>/setup
+state.json
+# remove: delete only the named entries
+# ls -A <root>
+keep.txt
+# ls ~/.claude/skills
+my-own-skill
+# separate --state-root: ls -A <root>
+install install: exit 0
+channel.json
+current
+install.lock
+# ls <state-root>
+service

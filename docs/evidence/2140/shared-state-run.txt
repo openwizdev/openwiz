@@ -1,0 +1,30 @@
+# shared --state-root: the guide's removal (root entries, verified builds, named settings, then rmdir), on the real v0.1.0 x86_64 Linux package and a fresh synthetic HOME. A Decisions setting is saved through the packaged first-fleet helper first.
+# A: a shared --state-root that already holds another app's files
+install install: exit 0
+install skills: exit 0
+setup.py check: exit 0
+first_fleet.py decisions --yes: exit 0
+# ls -A <state> before
+other-app
+other.txt
+service
+setup
+rmdir <state>/service/builds <state>/service <state>: exit 1
+rmdir <root>: exit 0
+# left in <state>:
+.
+./other-app
+./other-app/data
+./other.txt
+./service
+./service/other-service.txt
+# <root> exists: no
+# B: the default state inside a dedicated <root>
+install install: exit 0
+install skills: exit 0
+setup.py check: exit 0
+first_fleet.py decisions --yes: exit 0
+rmdir <state>/service/builds <state>/service <state>: exit 0
+rmdir <root>: exit 0
+# <root> exists: no
+# ~/.claude/skills still holds the 18 copies until removed by name: 18

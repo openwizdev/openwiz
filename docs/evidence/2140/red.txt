@@ -1,0 +1,12 @@
+$ python3 -I docs/evidence/2140/check_docs.py <unpacked openwiz-0.1.0-x86_64-unknown-linux-gnu package>
+# at main 7e66c5ed7170ca1c3488d1d5b1fabffe815dc536, before the fix; exit 1
+FAIL README.md:12: stale words: 'before 0.1.0'
+FAIL README.md:12: stale words: 'coming soon'
+FAIL README.md:16: stale words: 'coming soon'
+FAIL README.md:18: stale words: '0.0.12'
+FAIL docs/install.md:17: stale words: 'setup page'
+FAIL docs/install.md:17: stale words: '7370'
+FAIL docs/install.md:39: stale words: 'setup page'
+FAIL docs/install.md: link ../skills/install/SKILL.md is not a tracked file, so GitHub answers 404
+FAIL docs/install.md: link ../skills/install/SKILL.md#5-first-fleet is not a tracked file, so GitHub answers 404
+17 links and commands checked, 9 failures

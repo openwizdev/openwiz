@@ -1,0 +1,5 @@
+$ python3 -I docs/evidence/2140/check_docs.py <unpacked openwiz-0.1.0-x86_64-unknown-linux-gnu package>
+# at 898bfc73 (R1), with a whole-install-folder delete counted as a failure; exit 1
+FAIL docs/install.md:79: deletes the whole install folder: 'remove the install'
+FAIL docs/install.md:83: deletes the whole install folder: 'deletes the install folder'
+28 links and commands checked, 2 failures

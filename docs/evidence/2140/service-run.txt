@@ -1,0 +1,35 @@
+# R1 re-check: a fresh install plus a saved Decisions setting, then the guide's build-only removal, on the real v0.1.0 x86_64 Linux package and a fresh synthetic HOME. service/app/ (the App's saved settings) is named from the packaged runtime/github-app/app.py and setup.py, not created here: it needs a real App.
+install install: exit 0
+install skills: exit 0
+setup.py check: exit 0
+# fresh install: find <state> -maxdepth 3
+.
+./service
+./service/builds
+./service/builds/2abcd5f532c5c2a080a1b876e27dec2b9e7d29ab
+./setup
+./setup/.lock
+./setup/state.json
+# saved Decisions setting: a synthetic companion brain in setup state, then the packaged helper's decisions --yes
+first_fleet.py decisions --yes: exit 0
+# find <state>/service -maxdepth 2
+.
+./builds
+./builds/2abcd5f532c5c2a080a1b876e27dec2b9e7d29ab
+./config.json
+# verified builds: folders in service/builds/ whose install-manifest.json source is their name
+verified: 2abcd5f532c5c2a080a1b876e27dec2b9e7d29ab
+# remove, keeping settings: current, channel.json, install.lock, skills/ and the verified builds only
+# ls -A <root>
+keep.txt
+state
+# find <state>/service -maxdepth 2
+.
+./builds
+./config.json
+service/config.json unchanged
+setup/state.json unchanged
+# reinstall over the kept settings
+install install: exit 0
+install status: exit 0
+service/config.json still unchanged

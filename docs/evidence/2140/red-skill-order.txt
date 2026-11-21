@@ -1,0 +1,9 @@
+$ python3 -I docs/evidence/2140/check_docs.py <unpacked openwiz-0.1.0-x86_64-unknown-linux-gnu package>
+# at e6630f52, with the install skill's order, overwrite step, resume phrase and identity_unreadable row required; exit 1
+FAIL docs/install.md: missing 'continue the OpenWiz install'
+FAIL docs/install.md: missing 'identity_unreadable'
+FAIL docs/install.md: missing "'^version: 0.2.2$'"
+FAIL docs/install.md: missing '.openwiz-skill'
+FAIL docs/install.md: a bare "continue" stalls some agents: 'say "continue"'
+FAIL docs/install.md: steps ['Preflight.', 'Verified download and install.', 'Skills into your agents, then a restart.', 'Setup and connections.', 'Prove it.', 'Explain.', 'First fleet.'] must put setup and logins before the skills and the restart
+33 links and commands checked, 6 failures

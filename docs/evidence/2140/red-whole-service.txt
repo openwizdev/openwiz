@@ -1,0 +1,5 @@
+$ python3 -I docs/evidence/2140/check_docs.py <unpacked openwiz-0.1.0-x86_64-unknown-linux-gnu package>
+# at 57f592b1 (R1 re-check), with deleting all of service/ counted as a failure; exit 1
+FAIL docs/install.md:86: deletes all of service/, which holds settings: 'delete only `state/service/`'
+FAIL docs/install.md:87: deletes all of service/, which holds settings: 'Delete its `service/`'
+28 links and commands checked, 2 failures

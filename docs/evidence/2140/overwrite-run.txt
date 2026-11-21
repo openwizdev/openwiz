@@ -1,0 +1,13 @@
+# the guide's step 4 overwrite block, run as written on the real v0.1.0 x86_64 Linux package and a fresh synthetic HOME, after install skills. A: WizSkills maint/0.2 today. B: the same block cloning WizSkills #239's head branch (0.2.2). ~/.cursor/skills/install is a synthetic unmarked folder of the user's.
+install install: exit 0
+install skills: exit 0
+# before: version: 0.2.0 in ~/.claude, version: 0.2.0 in ~/.codex
+# A: the guide's block as written (WizSkills maint/0.2, today)
+NOT THE FIXED SKILL: nothing copied
+# after A: version: 0.2.0 in ~/.claude
+# B: the same block against WizSkills #239's head branch (0.2.2)
+ok: ~/.claude/skills/install
+ok: ~/.codex/skills/install
+# after B, ~/.claude/skills/install: version: 0.2.2; marker kept; scripts match: yes
+# after B, ~/.codex/skills/install: version: 0.2.2; marker kept; scripts match: yes
+# ~/.cursor/skills/install (no marker, the user's own): user's own
